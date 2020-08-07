@@ -52,9 +52,6 @@ SourceArt/**/*.tga
 Binaries/*
 Plugins/*/Binaries/*
 
-# Asset Files
-*.uasset
-
 # Builds
 Build/*
 
