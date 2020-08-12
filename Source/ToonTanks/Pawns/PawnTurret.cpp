@@ -50,3 +50,9 @@ float APawnTurret::GetDistanceFromPlayer() const
                                GetActorLocation())
                : 0.f;
 }
+
+void APawnTurret::HandleDestruction()
+{
+    Super::HandleDestruction();
+    Destroy();
+}

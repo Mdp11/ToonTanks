@@ -24,14 +24,16 @@ private:
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
     UCameraComponent* CameraComponent;
+
+    APlayerController* PlayerControllerRef{nullptr};
     
     FVector MoveDirection{};
     FQuat RotationDirection{};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(AllowPrivateAccess="true"))   
-    float MovementSpeed{100.f};
+    float MovementSpeed{550.f};
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(AllowPrivateAccess="true"))   
-    float RotationSpeed{100.f};
+    float RotationSpeed{250.f};
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
@@ -51,4 +53,6 @@ public:
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+
+    virtual void HandleDestruction() override;
 };

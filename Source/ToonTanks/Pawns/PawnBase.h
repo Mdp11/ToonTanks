@@ -30,6 +30,10 @@ class TOONTANKS_API APawnBase : public APawn
         AllowPrivateAccess="true"))
     USceneComponent* ProjectileSpawnPoint{nullptr};
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
+        AllowPrivateAccess="true"))
+    float TurretRotationInterpSpeed{0.3f};
+
 public:
     // Sets default values for this pawn's properties
     APawnBase();
@@ -40,5 +44,4 @@ protected:
     virtual void Fire();
 
     virtual void HandleDestruction();
-
 };

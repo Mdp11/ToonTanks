@@ -38,8 +38,7 @@ void APawnBase::RotateTurret(FVector TargetLocation)
         (TargetLocationClean - StartLocation).Rotation()
     };
 
-    const FRotator CurrentRotation = TurretMesh->GetComponentRotation();
-    TurretMesh->SetWorldRotation(FMath::Lerp(CurrentRotation, TurretRotation, 0.3f));
+    TurretMesh->SetWorldRotation(TurretRotation);
 }
 
 void APawnBase::Fire()
