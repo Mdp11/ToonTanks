@@ -18,6 +18,7 @@ AProjectileBase::AProjectileBase()
 
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed = MovementSpeed;
 
+    // AActor::SetLifeSpan(3.0f);
     InitialLifeSpan = 3.0f;
 }
 

@@ -8,12 +8,14 @@
 #include "PawnBase.generated.h"
 
 class UCapsuleComponent;
+class AProjectileBase;
 
 UCLASS()
 class TOONTANKS_API APawnBase : public APawn
 {
     GENERATED_BODY()
 
+    //COMPONENTS
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
     UCapsuleComponent* CapsuleComponent{nullptr};
@@ -30,9 +32,10 @@ class TOONTANKS_API APawnBase : public APawn
         AllowPrivateAccess="true"))
     USceneComponent* ProjectileSpawnPoint{nullptr};
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
-        AllowPrivateAccess="true"))
-    float TurretRotationInterpSpeed{0.3f};
+    //VARIABLES
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile Type", meta=
+        (AllowPrivateAccess="true"))
+    TSubclassOf<AProjectileBase> ProjectileClass;
 
 public:
     // Sets default values for this pawn's properties
