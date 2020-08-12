@@ -28,7 +28,7 @@ private:
     APawnTank* PlayerPawn{nullptr};
     
     void CheckFireConditions();
-    float GetDistanceFromPlayer();
+    float GetDistanceFromPlayer() const;
 
 public:
     APawnTurret();

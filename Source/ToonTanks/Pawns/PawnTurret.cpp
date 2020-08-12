@@ -23,6 +23,12 @@ void APawnTurret::BeginPlay()
 void APawnTurret::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    if (!PlayerPawn || GetDistanceFromPlayer() > FireRange)
+    {
+        return;
+    }
+    RotateTurret(PlayerPawn->GetActorLocation());
 }
 
 void APawnTurret::CheckFireConditions()
@@ -31,17 +37,14 @@ void APawnTurret::CheckFireConditions()
     {
         return;
     }
-    if(GetDistanceFromPlayer() <= FireRange)
+    if (GetDistanceFromPlayer() <= FireRange)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Fire!"));
+        Fire();
     }
 }
 
-float APawnTurret::GetDistanceFromPlayer()
+float APawnTurret::GetDistanceFromPlayer() const
 {
-    UE_LOG(LogTemp, Warning, TEXT("Distance = %f"), FVector::Dist(PlayerPawn->GetActorLocation(),
-                       GetActorLocation()));
-
     return PlayerPawn
                ? FVector::Dist(PlayerPawn->GetActorLocation(),
                                GetActorLocation())
