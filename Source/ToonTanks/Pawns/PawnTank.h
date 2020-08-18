@@ -25,6 +25,7 @@ private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
     UCameraComponent* CameraComponent;
 
+    UPROPERTY()
     APlayerController* PlayerControllerRef{nullptr};
     
     FVector MoveDirection{};

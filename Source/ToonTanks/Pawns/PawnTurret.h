@@ -25,6 +25,8 @@ private:
     float FireRange{1000.f};
     
     FTimerHandle FireRateTimerHandle;
+    
+    UPROPERTY()
     APawnTank* PlayerPawn{nullptr};
     
     void CheckFireConditions();
