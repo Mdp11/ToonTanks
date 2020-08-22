@@ -12,7 +12,9 @@ AProjectileBase::AProjectileBase()
 
     ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(
         TEXT("Projectile Mesh"));
+    
     ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
+
     RootComponent = ProjectileMesh;
 
     ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(
