@@ -19,22 +19,28 @@ class TOONTANKS_API APawnTank : public APawnBase
 
 private:
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
     USpringArmComponent* SpringArmComponent;
-    
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(AllowPrivateAccess="true"))
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
     UCameraComponent* CameraComponent;
 
     UPROPERTY()
     APlayerController* PlayerControllerRef{nullptr};
-    
+
     FVector MoveDirection{};
     FQuat RotationDirection{};
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(AllowPrivateAccess="true"))   
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
+        AllowPrivateAccess="true"))
     float MovementSpeed{550.f};
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(AllowPrivateAccess="true"))   
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
+        AllowPrivateAccess="true"))
     float RotationSpeed{250.f};
+
+    bool bIsPlayerAlive{true};
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
@@ -49,12 +55,14 @@ public:
     virtual void Tick(float DeltaTime) override;
 
     // Called to bind functionality to input
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    virtual void SetupPlayerInputComponent(
+        class UInputComponent* PlayerInputComponent) override;
 
     virtual void HandleDestruction() override;
-    
+
+    bool IsAlive() const { return bIsPlayerAlive; }
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
-
 };
