@@ -28,8 +28,8 @@ public:
 
 protected:
 
-    
-    int8 StartDelay{4};
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="GameLoop")
+    int32 StartDelay{3};
 
     virtual void BeginPlay() override;
 
