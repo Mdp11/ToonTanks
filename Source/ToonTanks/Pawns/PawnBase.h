@@ -35,12 +35,15 @@ class TOONTANKS_API APawnBase : public APawn
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
-    UHealthComponent* HealthComponent;
+    UHealthComponent* HealthComponent{nullptr};
 
     //VARIABLES
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile Type", meta=
         (AllowPrivateAccess="true"))
     TSubclassOf<AProjectileBase> ProjectileClass;
+
+    UPROPERTY(EditAnywhere, Category="Effects")
+    UParticleSystem* DeathParticles{nullptr};
 
 public:
     // Sets default values for this pawn's properties

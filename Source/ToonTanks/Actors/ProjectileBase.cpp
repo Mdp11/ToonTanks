@@ -54,5 +54,7 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
                                   this,
                                   DamageType);
 
+    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect, GetActorLocation());
+
     Destroy();
 }

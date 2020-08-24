@@ -33,6 +33,9 @@ private:
         meta=(AllowPrivateAccess="true"))
     float Damage{15.f};
 
+    UPROPERTY(EditAnywhere, Category="Effects")
+    UParticleSystem* ProjectileHitEffect{nullptr};
+
     UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const
