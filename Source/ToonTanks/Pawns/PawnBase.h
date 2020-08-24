@@ -9,6 +9,7 @@
 
 class UCapsuleComponent;
 class AProjectileBase;
+class UHealthComponent;
 
 UCLASS()
 class TOONTANKS_API APawnBase : public APawn
@@ -32,6 +33,10 @@ class TOONTANKS_API APawnBase : public APawn
         AllowPrivateAccess="true"))
     USceneComponent* ProjectileSpawnPoint{nullptr};
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
+    UHealthComponent* HealthComponent;
+
     //VARIABLES
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile Type", meta=
         (AllowPrivateAccess="true"))
@@ -42,10 +47,9 @@ public:
     APawnBase();
 
     virtual void HandleDestruction();
-    
+
 protected:
     virtual void RotateTurret(FVector TargetLocation);
 
     virtual void Fire();
-
 };
