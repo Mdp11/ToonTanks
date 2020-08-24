@@ -28,6 +28,9 @@ public:
 
 protected:
 
+    
+    int8 StartDelay{4};
+
     virtual void BeginPlay() override;
 
     UFUNCTION(BlueprintImplementableEvent)
