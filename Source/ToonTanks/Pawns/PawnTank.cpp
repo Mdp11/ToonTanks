@@ -12,13 +12,13 @@ APawnTank::APawnTank()
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     CameraComponent->SetupAttachment(SpringArmComponent);
+    FireRate = 0.5f;
 }
 
 // Called when the game starts or when spawned
 void APawnTank::BeginPlay()
 {
     Super::BeginPlay();
-    FireRate = 0.5f;
     PlayerControllerRef = Cast<APlayerController>(GetController());
 }
 
