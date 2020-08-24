@@ -6,7 +6,8 @@
 
 APawnTank::APawnTank()
 {
-    SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring arm"));
+    SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(
+        TEXT("Spring arm"));
     SpringArmComponent->SetupAttachment(RootComponent);
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -17,7 +18,7 @@ APawnTank::APawnTank()
 void APawnTank::BeginPlay()
 {
     Super::BeginPlay();
-
+    FireRate = 0.5f;
     PlayerControllerRef = Cast<APlayerController>(GetController());
 }
 
@@ -28,10 +29,11 @@ void APawnTank::Tick(float DeltaTime)
     Rotate();
     Move();
 
-    if(PlayerControllerRef)
+    if (PlayerControllerRef)
     {
         FHitResult HitResult;
-        PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+        PlayerControllerRef->GetHitResultUnderCursor(
+            ECC_Visibility, false, HitResult);
         RotateTurret(HitResult.ImpactPoint);
     }
 }
@@ -40,19 +42,26 @@ void APawnTank::Tick(float DeltaTime)
 void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-    PlayerInputComponent->BindAxis("MoveForward", this, &APawnTank::CalculateMoveInput);
-    PlayerInputComponent->BindAxis("Turn", this, &APawnTank::CalculateRotationInput);
-    PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APawnTank::Fire);
+    PlayerInputComponent->BindAxis("MoveForward", this,
+                                   &APawnTank::CalculateMoveInput);
+    PlayerInputComponent->BindAxis("Turn", this,
+                                   &APawnTank::CalculateRotationInput);
+    PlayerInputComponent->
+        BindAction("Fire", IE_Pressed, this, &APawnTank::Fire);
 }
 
 void APawnTank::CalculateMoveInput(const float Value)
 {
-    MoveDirection = {Value * MovementSpeed * GetWorld()->DeltaTimeSeconds, 0.f, 0.f};
+    MoveDirection = {
+        Value * MovementSpeed * GetWorld()->DeltaTimeSeconds, 0.f, 0.f
+    };
 }
 
 void APawnTank::CalculateRotationInput(const float Value)
 {
-    const float RotateAmount{Value * RotationSpeed * GetWorld()->DeltaTimeSeconds};
+    const float RotateAmount{
+        Value * RotationSpeed * GetWorld()->DeltaTimeSeconds
+    };
     const FRotator Rotation{0.f, RotateAmount, 0.f};
     RotationDirection = FQuat{Rotation};
 }
@@ -65,6 +74,19 @@ void APawnTank::Move()
 void APawnTank::Rotate()
 {
     AddActorLocalRotation(RotationDirection, true);
+}
+
+void APawnTank::Fire()
+{
+    if (bReadyToFire)
+    {
+        Super::Fire();
+        bReadyToFire = false;
+        FTimerHandle FireRateHandle;
+        GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
+                                               &APawnTank::RestoreFireAbility,
+                                               FireRate);
+    }
 }
 
 void APawnTank::HandleDestruction()

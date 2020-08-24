@@ -17,11 +17,6 @@ class TOONTANKS_API APawnTurret : public APawnBase
     GENERATED_BODY()
 
 private:
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
-        AllowPrivateAccess="true"))
-    float FireRate{2.f};
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
         AllowPrivateAccess="true"))
     float FireRange{1000.f};

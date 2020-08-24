@@ -52,6 +52,11 @@ public:
     virtual void HandleDestruction();
 
 protected:
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
+    AllowPrivateAccess="true"))
+    float FireRate{2.f};
+    
     virtual void RotateTurret(FVector TargetLocation);
 
     virtual void Fire();

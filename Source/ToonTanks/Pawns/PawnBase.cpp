@@ -27,7 +27,8 @@ APawnBase::APawnBase()
         TEXT("Projectile spawn point"));
     ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 
-    HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health component"));
+    HealthComponent = CreateDefaultSubobject<UHealthComponent>(
+        TEXT("Health component"));
 }
 
 void APawnBase::RotateTurret(FVector TargetLocation)
@@ -50,16 +51,17 @@ void APawnBase::Fire()
 {
     if (ProjectileClass)
     {
-        AProjectileBase* TempProjectile = GetWorld()
-            ->SpawnActor<AProjectileBase>(ProjectileClass, ProjectileSpawnPoint
-                                          ->GetComponentLocation(),
-                                          ProjectileSpawnPoint->
-                                          GetComponentRotation());
+        AProjectileBase* TempProjectile = GetWorld()->
+            SpawnActor<AProjectileBase>(ProjectileClass, ProjectileSpawnPoint
+                                        ->GetComponentLocation(),
+                                        ProjectileSpawnPoint->
+                                        GetComponentRotation());
         TempProjectile->SetOwner(this);
     }
 }
 
 void APawnBase::HandleDestruction()
 {
-    UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles, GetActorLocation());
+    UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles,
+                                             GetActorLocation());
 }

@@ -42,11 +42,15 @@ private:
 
     bool bIsPlayerAlive{true};
 
+    bool bReadyToFire{true};
+
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
 
     void Move();
     void Rotate();
+
+    void RestoreFireAbility() { bReadyToFire = true; }
 
 public:
     APawnTank();
@@ -65,4 +69,6 @@ public:
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+
+    virtual void Fire() override;
 };
