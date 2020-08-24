@@ -65,7 +65,7 @@ void ATanksGameModeBase::HandleGameStart()
 
         GetWorld()->GetTimerManager().SetTimer(PlayerEnableHandle,
                                                PlayerEnableDelegate,
-                                               StartDelay,
+                                               StartDelay + 1,
                                                false);
     }
 }
