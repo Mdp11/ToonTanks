@@ -3,6 +3,7 @@
 #include "ProjectileBase.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "ToonTanks/Pawns/PawnBase.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -12,7 +13,7 @@ AProjectileBase::AProjectileBase()
 
     ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(
         TEXT("Projectile Mesh"));
-    
+
     ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
 
     RootComponent = ProjectileMesh;
@@ -49,12 +50,20 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
         return;
     }
 
+    FVector ParticleScale;
+    Cast<APawnBase>(OtherActor)
+        ? ParticleScale = {1.f, 1.f, 1.f}
+        : ParticleScale = {0.2f, 0.2f, 0.2f};
+
     UGameplayStatics::ApplyDamage(OtherActor, Damage,
                                   ProjectileOwner->GetInstigatorController(),
                                   this,
                                   DamageType);
 
-    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect, GetActorLocation());
+    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
+                                             GetActorLocation(),
+                                             FRotator::ZeroRotator,
+                                             ParticleScale);
 
     Destroy();
 }
