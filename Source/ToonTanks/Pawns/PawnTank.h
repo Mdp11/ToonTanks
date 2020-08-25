@@ -33,6 +33,9 @@ private:
     FVector MoveDirection{};
     FQuat RotationDirection{};
 
+    UPROPERTY(EditAnywhere, Category="Effects")
+    TSubclassOf<UCameraShake> FireShake;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
         AllowPrivateAccess="true"))
     float MovementSpeed{550.f};

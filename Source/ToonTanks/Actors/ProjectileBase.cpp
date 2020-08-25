@@ -21,7 +21,7 @@ AProjectileBase::AProjectileBase()
         TEXT("Projectile Movement"));
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
         MovementSpeed;
-    
+
     ProjectileTrailEffect = CreateDefaultSubobject<UParticleSystemComponent>
         (TEXT("Trail effect"));
     ProjectileTrailEffect->SetupAttachment(RootComponent);
@@ -35,7 +35,7 @@ void AProjectileBase::BeginPlay()
     Super::BeginPlay();
 
     UGameplayStatics::PlaySoundAtLocation(this, LaunchSound,
-                                     GetActorLocation());
+                                          GetActorLocation());
 }
 
 void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
@@ -71,7 +71,7 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
                                              ParticleScale);
 
     UGameplayStatics::PlaySoundAtLocation(this, HitSound,
-                                         GetActorLocation(), FRotator::ZeroRotator, 0.5f);
-
+                                          GetActorLocation(),
+                                          FRotator::ZeroRotator, 0.5f);
     Destroy();
 }
