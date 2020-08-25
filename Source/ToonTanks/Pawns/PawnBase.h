@@ -45,6 +45,9 @@ class TOONTANKS_API APawnBase : public APawn
     UPROPERTY(EditAnywhere, Category="Effects")
     UParticleSystem* DeathParticles{nullptr};
 
+    UPROPERTY(EditAnywhere, Category="Sounds")
+    USoundBase* ExplosionSound{nullptr};
+
 public:
     // Sets default values for this pawn's properties
     APawnBase();
@@ -54,9 +57,9 @@ public:
 protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
-    AllowPrivateAccess="true"))
+        AllowPrivateAccess="true"))
     float FireRate{2.f};
-    
+
     virtual void RotateTurret(FVector TargetLocation);
 
     virtual void Fire();

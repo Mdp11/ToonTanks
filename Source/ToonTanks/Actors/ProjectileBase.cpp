@@ -14,20 +14,16 @@ AProjectileBase::AProjectileBase()
 
     ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(
         TEXT("Projectile Mesh"));
-
     ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
-
     RootComponent = ProjectileMesh;
 
     ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(
         TEXT("Projectile Movement"));
-
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
         MovementSpeed;
-
+    
     ProjectileTrailEffect = CreateDefaultSubobject<UParticleSystemComponent>
         (TEXT("Trail effect"));
-
     ProjectileTrailEffect->SetupAttachment(RootComponent);
 
     InitialLifeSpan = 3.0f;
@@ -37,6 +33,9 @@ AProjectileBase::AProjectileBase()
 void AProjectileBase::BeginPlay()
 {
     Super::BeginPlay();
+
+    UGameplayStatics::PlaySoundAtLocation(this, LaunchSound,
+                                     GetActorLocation());
 }
 
 void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
@@ -70,6 +69,9 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
                                              GetActorLocation(),
                                              FRotator::ZeroRotator,
                                              ParticleScale);
+
+    UGameplayStatics::PlaySoundAtLocation(this, HitSound,
+                                         GetActorLocation(), FRotator::ZeroRotator, 0.5f);
 
     Destroy();
 }

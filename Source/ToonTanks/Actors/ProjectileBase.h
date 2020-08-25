@@ -41,6 +41,12 @@ private:
     UPROPERTY(EditAnywhere, Category="Effects")
     UParticleSystem* ProjectileHitEffect{nullptr};
 
+    UPROPERTY(EditAnywhere, Category="Sounds")
+    USoundBase* LaunchSound{nullptr};
+    
+    UPROPERTY(EditAnywhere, Category="Sounds")
+    USoundBase* HitSound{nullptr};
+
     //FUNCTIONS
     UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,

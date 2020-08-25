@@ -64,4 +64,6 @@ void APawnBase::HandleDestruction()
 {
     UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles,
                                              GetActorLocation());
+    UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound,
+                                          GetActorLocation());
 }
