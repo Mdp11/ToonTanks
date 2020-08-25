@@ -4,6 +4,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ToonTanks/Pawns/PawnBase.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -23,6 +24,11 @@ AProjectileBase::AProjectileBase()
 
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
         MovementSpeed;
+
+    ProjectileTrailEffect = CreateDefaultSubobject<UParticleSystemComponent>
+        (TEXT("Trail effect"));
+
+    ProjectileTrailEffect->SetupAttachment(RootComponent);
 
     InitialLifeSpan = 3.0f;
 }
