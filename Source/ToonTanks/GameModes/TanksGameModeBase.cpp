@@ -47,10 +47,11 @@ void ATanksGameModeBase::HandleGameStart()
 {
     if (GetWorld()->GetName().Equals("MainMenu"))
     {
-        GameStart();
+        LaunchMenu();
     }
     else
     {
+        GameStart();
         TargetTurrets = GetTargetTurretsCount();
         PlayerTank = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
         PlayerControllerRef = Cast<APlayerControllerBase>
