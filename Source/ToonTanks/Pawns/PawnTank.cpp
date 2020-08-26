@@ -18,7 +18,6 @@ APawnTank::APawnTank()
     ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>
         (TEXT("Shield effect"));
     ShieldEffect->SetupAttachment(RootComponent);
-    ShieldEffect->Deactivate();
     FireRate = 0.5f;
 }
 
@@ -27,6 +26,7 @@ void APawnTank::BeginPlay()
 {
     Super::BeginPlay();
     PlayerControllerRef = Cast<APlayerController>(GetController());
+    ShieldEffect->Deactivate();
 }
 
 // Called every frame
@@ -90,7 +90,7 @@ void APawnTank::Rotate()
 void APawnTank::ActivateShield()
 {
     bShieldActive = true;
-    if (!ShieldEffect)
+    if (ShieldEffect)
     {
         ShieldEffect->Activate();
     }
@@ -99,7 +99,7 @@ void APawnTank::ActivateShield()
 void APawnTank::DeactivateShield()
 {
     bShieldActive = false;
-    if (!ShieldEffect)
+    if (ShieldEffect)
     {
         ShieldEffect->Deactivate();
     }
