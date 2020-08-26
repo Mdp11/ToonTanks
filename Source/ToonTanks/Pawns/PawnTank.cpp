@@ -64,14 +64,14 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void APawnTank::CalculateMoveInput(const float Value)
 {
     MoveDirection = {
-        Value * MovementSpeed * GetWorld()->DeltaTimeSeconds, 0.f, 0.f
+        Value * CurrentMovementSpeed * GetWorld()->DeltaTimeSeconds, 0.f, 0.f
     };
 }
 
 void APawnTank::CalculateRotationInput(const float Value)
 {
     const float RotateAmount{
-        Value * RotationSpeed * GetWorld()->DeltaTimeSeconds
+        Value * CurrentRotationSpeed * GetWorld()->DeltaTimeSeconds
     };
     const FRotator Rotation{0.f, RotateAmount, 0.f};
     RotationDirection = FQuat{Rotation};
@@ -93,6 +93,8 @@ void APawnTank::ActivateShield()
     if (ShieldEffect)
     {
         ShieldEffect->Activate();
+        ImpareMovement();
+        bReadyToFire = false;
     }
 }
 
@@ -102,7 +104,21 @@ void APawnTank::DeactivateShield()
     if (ShieldEffect)
     {
         ShieldEffect->Deactivate();
+        RestoreMovement();
+        bReadyToFire = true;
     }
+}
+
+void APawnTank::ImpareMovement()
+{
+    CurrentMovementSpeed = DefaultMovementSpeed / 3;
+    CurrentRotationSpeed = DefaultRotationSpeed / 3;
+}
+
+void APawnTank::RestoreMovement()
+{
+    CurrentMovementSpeed = DefaultMovementSpeed;
+    CurrentRotationSpeed = DefaultRotationSpeed;
 }
 
 void APawnTank::Fire()

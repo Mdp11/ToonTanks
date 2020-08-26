@@ -43,10 +43,18 @@ private:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
         AllowPrivateAccess="true"))
-    float MovementSpeed{550.f};
+    float DefaultMovementSpeed{550.f};
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
         AllowPrivateAccess="true"))
-    float RotationSpeed{250.f};
+    float DefaultRotationSpeed{250.f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
+        AllowPrivateAccess="true"))
+    float CurrentMovementSpeed{550.f};
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
+        AllowPrivateAccess="true"))
+    float CurrentRotationSpeed{250.f};
 
     //FUNCTIONS
     bool bIsPlayerAlive{true};
@@ -67,6 +75,9 @@ private:
 
     void DeactivateShield();
 
+    void ImpareMovement();
+
+    void RestoreMovement();
 public:
     APawnTank();
 
