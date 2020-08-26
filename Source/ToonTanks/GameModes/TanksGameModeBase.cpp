@@ -45,28 +45,38 @@ int32 ATanksGameModeBase::GetTargetTurretsCount() const
 
 void ATanksGameModeBase::HandleGameStart()
 {
-    TargetTurrets = GetTargetTurretsCount();
-    PlayerTank = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
     PlayerControllerRef = Cast<APlayerControllerBase>
         (UGameplayStatics::GetPlayerController(this, 0));
-
-    GameStart();
 
     if (PlayerControllerRef)
     {
         PlayerControllerRef->SetPlayerEnabledState(false);
+    }
+    
+    if (GetWorld()->GetName().Equals("MainMenu"))
+    {
+        LaunchMenu();
+    }
+    else
+    {
+        GameStart();
+        TargetTurrets = GetTargetTurretsCount();
+        PlayerTank = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
-        FTimerHandle PlayerEnableHandle;
-        const FTimerDelegate PlayerEnableDelegate =
-            FTimerDelegate::CreateUObject(
-                PlayerControllerRef,
-                &APlayerControllerBase::SetPlayerEnabledState,
-                true);
+        if (PlayerControllerRef)
+        {
+            FTimerHandle PlayerEnableHandle;
+            const FTimerDelegate PlayerEnableDelegate =
+                FTimerDelegate::CreateUObject(
+                    PlayerControllerRef,
+                    &APlayerControllerBase::SetPlayerEnabledState,
+                    true);
 
-        GetWorld()->GetTimerManager().SetTimer(PlayerEnableHandle,
-                                               PlayerEnableDelegate,
-                                               StartDelay + 1,
-                                               false);
+            GetWorld()->GetTimerManager().SetTimer(PlayerEnableHandle,
+                                                   PlayerEnableDelegate,
+                                                   StartDelay + 1,
+                                                   false);
+        }
     }
 }
 
