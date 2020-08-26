@@ -18,15 +18,20 @@ class TOONTANKS_API APawnTank : public APawnBase
     GENERATED_BODY()
 
 private:
+    //COMPONENTS
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
+    USpringArmComponent* SpringArmComponent{nullptr};
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
-    USpringArmComponent* SpringArmComponent;
+    UCameraComponent* CameraComponent{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
-    UCameraComponent* CameraComponent;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
+        meta=(AllowPrivateAccess="true"))
+    UParticleSystemComponent* ShieldEffect{nullptr};
 
+    //VARIABLES
     UPROPERTY()
     APlayerController* PlayerControllerRef{nullptr};
 
@@ -43,9 +48,12 @@ private:
         AllowPrivateAccess="true"))
     float RotationSpeed{250.f};
 
+    //FUNCTIONS
     bool bIsPlayerAlive{true};
 
     bool bReadyToFire{true};
+
+    bool bShieldActive{false};
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
@@ -54,6 +62,10 @@ private:
     void Rotate();
 
     void RestoreFireAbility() { bReadyToFire = true; }
+
+    void ActivateShield();
+
+    void DeactivateShield();
 
 public:
     APawnTank();

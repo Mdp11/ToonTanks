@@ -3,6 +3,8 @@
 #include "PawnTank.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 
 APawnTank::APawnTank()
 {
@@ -12,6 +14,11 @@ APawnTank::APawnTank()
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     CameraComponent->SetupAttachment(SpringArmComponent);
+
+    ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>
+        (TEXT("Shield effect"));
+    ShieldEffect->SetupAttachment(RootComponent);
+    ShieldEffect->Deactivate();
     FireRate = 0.5f;
 }
 
@@ -48,6 +55,10 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
                                    &APawnTank::CalculateRotationInput);
     PlayerInputComponent->
         BindAction("Fire", IE_Pressed, this, &APawnTank::Fire);
+    PlayerInputComponent->
+        BindAction("Shield", IE_Pressed, this, &APawnTank::ActivateShield);
+    PlayerInputComponent->
+        BindAction("Shield", IE_Released, this, &APawnTank::DeactivateShield);
 }
 
 void APawnTank::CalculateMoveInput(const float Value)
@@ -76,12 +87,31 @@ void APawnTank::Rotate()
     AddActorLocalRotation(RotationDirection, true);
 }
 
+void APawnTank::ActivateShield()
+{
+    bShieldActive = true;
+    if (!ShieldEffect)
+    {
+        ShieldEffect->Activate();
+    }
+}
+
+void APawnTank::DeactivateShield()
+{
+    bShieldActive = false;
+    if (!ShieldEffect)
+    {
+        ShieldEffect->Deactivate();
+    }
+}
+
 void APawnTank::Fire()
 {
     if (bReadyToFire)
     {
         Super::Fire();
-        GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(FireShake, 0.2f);
+        GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
+            FireShake, 0.2f);
         bReadyToFire = false;
         FTimerHandle FireRateHandle;
         GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
