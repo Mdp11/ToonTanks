@@ -12,6 +12,4 @@ void APlayerControllerBase::SetPlayerEnabledState(bool PlayerEnabled)
     {
         GetPawn()->DisableInput(this);
     }
-
-    bShowMouseCursor = PlayerEnabled;
 }
