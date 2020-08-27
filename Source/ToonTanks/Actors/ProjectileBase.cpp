@@ -4,6 +4,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ToonTanks/Pawns/PawnBase.h"
+#include "ToonTanks/Pawns/PawnTank.h"
 #include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
@@ -54,24 +55,40 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
     {
         return;
     }
-
+    
     FVector ParticleScale;
-    Cast<APawnBase>(OtherActor)
-        ? ParticleScale = {1.f, 1.f, 1.f}
-        : ParticleScale = {0.2f, 0.2f, 0.2f};
-
-    UGameplayStatics::ApplyDamage(OtherActor, Damage,
-                                  ProjectileOwner->GetInstigatorController(),
-                                  this,
-                                  DamageType);
+	APawnTank* PlayerTank = Cast<APawnTank>(OtherActor);
+    if (!Cast<APawnBase>(OtherActor))
+    {
+        ParticleScale = {0.2f, 0.2f, 0.2f};
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound,
+                                          GetActorLocation(),
+                                          FRotator::ZeroRotator, 0.2f);
+    }
+	else if ((PlayerTank && PlayerTank->IsShieldActive()))
+	{
+		ParticleScale = {0.2f, 0.2f, 0.2f};
+		UGameplayStatics::PlaySoundAtLocation(this, ShieldHitSound,
+                                          GetActorLocation());
+	}
+    else
+    {
+        ParticleScale = {1.f, 1.f, 1.f};
+        UGameplayStatics::ApplyDamage(OtherActor, Damage,
+                                      ProjectileOwner->
+                                      GetInstigatorController(),
+                                      this,
+                                      DamageType);
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound,
+										  GetActorLocation(),
+										  FRotator::ZeroRotator, 0.2f);
+    }
 
     UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
                                              GetActorLocation(),
                                              FRotator::ZeroRotator,
                                              ParticleScale);
 
-    UGameplayStatics::PlaySoundAtLocation(this, HitSound,
-                                          GetActorLocation(),
-                                          FRotator::ZeroRotator, 0.5f);
+    
     Destroy();
 }

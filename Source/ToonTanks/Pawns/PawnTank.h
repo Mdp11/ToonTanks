@@ -18,34 +18,52 @@ class TOONTANKS_API APawnTank : public APawnBase
     GENERATED_BODY()
 
 private:
+    //COMPONENTS
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
+    USpringArmComponent* SpringArmComponent{nullptr};
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
-    USpringArmComponent* SpringArmComponent;
+    UCameraComponent* CameraComponent{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
-    UCameraComponent* CameraComponent;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
+        meta=(AllowPrivateAccess="true"))
+    UParticleSystemComponent* ShieldEffect{nullptr};
 
+    //VARIABLES
     UPROPERTY()
     APlayerController* PlayerControllerRef{nullptr};
 
     FVector MoveDirection{};
     FQuat RotationDirection{};
 
+    FTimerHandle FireRateHandle;
+
     UPROPERTY(EditAnywhere, Category="Effects")
     TSubclassOf<UCameraShake> FireShake;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
         AllowPrivateAccess="true"))
-    float MovementSpeed{550.f};
+    float DefaultMovementSpeed{550.f};
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
         AllowPrivateAccess="true"))
-    float RotationSpeed{250.f};
+    float DefaultRotationSpeed{250.f};
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
+        AllowPrivateAccess="true"))
+    float CurrentMovementSpeed{550.f};
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
+        AllowPrivateAccess="true"))
+    float CurrentRotationSpeed{250.f};
+
+    //FUNCTIONS
     bool bIsPlayerAlive{true};
 
     bool bReadyToFire{true};
+
+    bool bShieldActive{false};
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
@@ -55,6 +73,13 @@ private:
 
     void RestoreFireAbility() { bReadyToFire = true; }
 
+    void ActivateShield();
+
+    void DeactivateShield();
+
+    void ImpairMovement();
+
+    void RestoreMovement();
 public:
     APawnTank();
 
@@ -68,6 +93,8 @@ public:
     virtual void HandleDestruction() override;
 
     bool IsAlive() const { return bIsPlayerAlive; }
+	
+	bool IsShieldActive() const { return bShieldActive; }
 
 protected:
     // Called when the game starts or when spawned
