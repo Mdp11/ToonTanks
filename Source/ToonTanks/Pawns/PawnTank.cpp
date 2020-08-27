@@ -138,6 +138,8 @@ void APawnTank::RestoreMovement()
 
 void APawnTank::ActivateBoost()
 {
+	CurrentMovementSpeed = DefaultMovementSpeed * 3;
+	CurrentRotationSpeed = DefaultRotationSpeed / 3;
 	if(RightBoostEffect && LeftBoostEffect)
 	{
 		RightBoostEffect->Activate();
@@ -147,6 +149,8 @@ void APawnTank::ActivateBoost()
 
 void APawnTank::DeactivateBoost()
 {
+	CurrentMovementSpeed = DefaultMovementSpeed;
+    CurrentRotationSpeed = DefaultRotationSpeed;
 	if(RightBoostEffect && LeftBoostEffect)
 	{
 		RightBoostEffect->Deactivate();
