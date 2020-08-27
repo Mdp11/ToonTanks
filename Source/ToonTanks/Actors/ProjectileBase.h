@@ -46,6 +46,9 @@ private:
     
     UPROPERTY(EditAnywhere, Category="Sounds")
     USoundBase* HitSound{nullptr};
+	
+	UPROPERTY(EditAnywhere, Category="Sounds")
+    USoundBase* ShieldHitSound{nullptr};
 
     //FUNCTIONS
     UFUNCTION()
