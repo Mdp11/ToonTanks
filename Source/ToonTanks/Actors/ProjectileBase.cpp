@@ -4,6 +4,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ToonTanks/Pawns/PawnBase.h"
+#include "ToonTanks/Pawns/PawnTank.h"
 #include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
@@ -54,16 +55,22 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
     {
         return;
     }
-
+    
     FVector ParticleScale;
-    Cast<APawnBase>(OtherActor)
-        ? ParticleScale = {1.f, 1.f, 1.f}
-        : ParticleScale = {0.2f, 0.2f, 0.2f};
-
-    UGameplayStatics::ApplyDamage(OtherActor, Damage,
-                                  ProjectileOwner->GetInstigatorController(),
-                                  this,
-                                  DamageType);
+	APawnTank* PlayerTank = Cast<APawnTank>(OtherActor);
+    if (!Cast<APawnBase>(OtherActor) || (PlayerTank && PlayerTank->IsShieldActive()))
+    {
+        ParticleScale = {0.2f, 0.2f, 0.2f};
+    }
+    else
+    {
+        ParticleScale = {1.f, 1.f, 1.f};
+        UGameplayStatics::ApplyDamage(OtherActor, Damage,
+                                      ProjectileOwner->
+                                      GetInstigatorController(),
+                                      this,
+                                      DamageType);
+    }
 
     UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
                                              GetActorLocation(),
@@ -72,6 +79,6 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
 
     UGameplayStatics::PlaySoundAtLocation(this, HitSound,
                                           GetActorLocation(),
-                                          FRotator::ZeroRotator, 0.5f);
+                                          FRotator::ZeroRotator, 0.2f);
     Destroy();
 }

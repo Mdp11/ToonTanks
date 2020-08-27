@@ -93,6 +93,8 @@ public:
     virtual void HandleDestruction() override;
 
     bool IsAlive() const { return bIsPlayerAlive; }
+	
+	bool IsShieldActive() const { return bShieldActive; }
 
 protected:
     // Called when the game starts or when spawned
