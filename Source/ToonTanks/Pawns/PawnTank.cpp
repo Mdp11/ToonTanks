@@ -90,7 +90,7 @@ void APawnTank::Rotate()
 void APawnTank::ActivateShield()
 {
     bShieldActive = true;
-    ImpareMovement();
+    ImpairMovement();
 
     if (ShieldEffect)
     {
@@ -110,7 +110,7 @@ void APawnTank::DeactivateShield()
     }
 }
 
-void APawnTank::ImpareMovement()
+void APawnTank::ImpairMovement()
 {
     CurrentMovementSpeed = DefaultMovementSpeed / 3;
     CurrentRotationSpeed = DefaultRotationSpeed / 3;

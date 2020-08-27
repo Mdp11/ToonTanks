@@ -77,7 +77,7 @@ private:
 
     void DeactivateShield();
 
-    void ImpareMovement();
+    void ImpairMovement();
 
     void RestoreMovement();
 public:
