@@ -18,6 +18,14 @@ APawnTank::APawnTank()
     ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>
         (TEXT("Shield effect"));
     ShieldEffect->SetupAttachment(RootComponent);
+	
+	RightBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>
+        (TEXT("Right boost Effect"));
+    RightBoostEffect->SetupAttachment(BaseMesh);
+	
+	LeftBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>
+        (TEXT("Left boost effect"));
+    LeftBoostEffect->SetupAttachment(BaseMesh);
     FireRate = 0.5f;
 }
 
@@ -27,6 +35,8 @@ void APawnTank::BeginPlay()
     Super::BeginPlay();
     PlayerControllerRef = Cast<APlayerController>(GetController());
     ShieldEffect->Deactivate();
+	RightBoostEffect->Deactivate();
+	LeftBoostEffect->Deactivate();
 }
 
 // Called every frame
@@ -59,6 +69,10 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
         BindAction("Shield", IE_Pressed, this, &APawnTank::ActivateShield);
     PlayerInputComponent->
         BindAction("Shield", IE_Released, this, &APawnTank::DeactivateShield);
+	PlayerInputComponent->
+        BindAction("Boost", IE_Pressed, this, &APawnTank::ActivateBoost);
+	PlayerInputComponent->
+        BindAction("Boost", IE_Released, this, &APawnTank::DeactivateBoost);
 }
 
 void APawnTank::CalculateMoveInput(const float Value)
@@ -120,6 +134,24 @@ void APawnTank::RestoreMovement()
 {
     CurrentMovementSpeed = DefaultMovementSpeed;
     CurrentRotationSpeed = DefaultRotationSpeed;
+}
+
+void APawnTank::ActivateBoost()
+{
+	if(RightBoostEffect && LeftBoostEffect)
+	{
+		RightBoostEffect->Activate();
+		LeftBoostEffect->Activate();
+	}
+}
+
+void APawnTank::DeactivateBoost()
+{
+	if(RightBoostEffect && LeftBoostEffect)
+	{
+		RightBoostEffect->Deactivate();
+		LeftBoostEffect->Deactivate();
+	}
 }
 
 void APawnTank::Fire()

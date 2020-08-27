@@ -30,6 +30,14 @@ private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
         meta=(AllowPrivateAccess="true"))
     UParticleSystemComponent* ShieldEffect{nullptr};
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
+        meta=(AllowPrivateAccess="true"))
+    UParticleSystemComponent* RightBoostEffect{nullptr};
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
+        meta=(AllowPrivateAccess="true"))
+    UParticleSystemComponent* LeftBoostEffect{nullptr};
 
     //VARIABLES
     UPROPERTY()
@@ -80,6 +88,11 @@ private:
     void ImpairMovement();
 
     void RestoreMovement();
+	
+	void ActivateBoost();
+	
+	void DeactivateBoost();
+	
 public:
     APawnTank();
 

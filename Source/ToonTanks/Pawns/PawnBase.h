@@ -23,18 +23,6 @@ class TOONTANKS_API APawnBase : public APawn
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
-    UStaticMeshComponent* BaseMesh{nullptr};
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
-    UStaticMeshComponent* TurretMesh{nullptr};
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
-    USceneComponent* ProjectileSpawnPoint{nullptr};
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
     UHealthComponent* HealthComponent{nullptr};
 
     //VARIABLES
@@ -58,6 +46,18 @@ public:
     virtual void HandleDestruction();
 
 protected:
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
+    UStaticMeshComponent* BaseMesh{nullptr};
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
+    UStaticMeshComponent* TurretMesh{nullptr};
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
+    USceneComponent* ProjectileSpawnPoint{nullptr};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
         AllowPrivateAccess="true"))
