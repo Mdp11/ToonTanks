@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Components/AudioComponent.h"
 
 APawnTank::APawnTank()
 {
@@ -18,14 +19,19 @@ APawnTank::APawnTank()
     ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>
         (TEXT("Shield effect"));
     ShieldEffect->SetupAttachment(RootComponent);
-	
-	RightBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>
+    ShieldActiveSound = CreateDefaultSubobject<UAudioComponent>(
+        TEXT("Shield active sound"));
+    ShieldActiveSound->bAutoActivate = false;
+
+    RightBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>
         (TEXT("Right boost Effect"));
     RightBoostEffect->SetupAttachment(BaseMesh);
-	
-	LeftBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>
+    LeftBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>
         (TEXT("Left boost effect"));
     LeftBoostEffect->SetupAttachment(BaseMesh);
+    BoostSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Boost sound"));
+    BoostSound->bAutoActivate = false;
+
     FireRate = 0.5f;
 }
 
@@ -35,8 +41,8 @@ void APawnTank::BeginPlay()
     Super::BeginPlay();
     PlayerControllerRef = Cast<APlayerController>(GetController());
     ShieldEffect->Deactivate();
-	RightBoostEffect->Deactivate();
-	LeftBoostEffect->Deactivate();
+    RightBoostEffect->Deactivate();
+    LeftBoostEffect->Deactivate();
 }
 
 // Called every frame
@@ -69,9 +75,9 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
         BindAction("Shield", IE_Pressed, this, &APawnTank::ActivateShield);
     PlayerInputComponent->
         BindAction("Shield", IE_Released, this, &APawnTank::DeactivateShield);
-	PlayerInputComponent->
+    PlayerInputComponent->
         BindAction("Boost", IE_Pressed, this, &APawnTank::ActivateBoost);
-	PlayerInputComponent->
+    PlayerInputComponent->
         BindAction("Boost", IE_Released, this, &APawnTank::DeactivateBoost);
 }
 
@@ -93,7 +99,19 @@ void APawnTank::CalculateRotationInput(const float Value)
 
 void APawnTank::Move()
 {
-    AddActorLocalOffset(MoveDirection, true);
+    if (bBoostActive)
+    {
+        const FVector MoveDirectionBoosted{
+            CurrentMovementSpeed * GetWorld()
+            ->DeltaTimeSeconds,
+            0.f, 0.f
+        };
+        AddActorLocalOffset(MoveDirectionBoosted, true);
+    }
+    else
+    {
+        AddActorLocalOffset(MoveDirection, true);
+    }
 }
 
 void APawnTank::Rotate()
@@ -103,32 +121,39 @@ void APawnTank::Rotate()
 
 void APawnTank::ActivateShield()
 {
-	if(bBoostActive)
-	{
-		return;
-	}
+    if (bBoostActive)
+    {
+        return;
+    }
     bShieldActive = true;
     ImpairMovement();
 
     if (ShieldEffect)
     {
         ShieldEffect->Activate();
-
+    }
+    if (ShieldActiveSound)
+    {
+        ShieldActiveSound->Play();
     }
 }
 
 void APawnTank::DeactivateShield()
 {
-	if(bBoostActive)
-	{
-		return;
-	}
+    if (bBoostActive)
+    {
+        return;
+    }
     bShieldActive = false;
     RestoreMovement();
 
     if (ShieldEffect)
     {
         ShieldEffect->Deactivate();
+    }
+    if (ShieldActiveSound)
+    {
+        ShieldActiveSound->Stop();
     }
 }
 
@@ -146,34 +171,42 @@ void APawnTank::RestoreMovement()
 
 void APawnTank::ActivateBoost()
 {
-	if(bShieldActive)
-	{
-		return;
-	}
-	bBoostActive = true;
-	CurrentMovementSpeed = DefaultMovementSpeed * 3;
-	CurrentRotationSpeed = DefaultRotationSpeed / 3;
-	if(RightBoostEffect && LeftBoostEffect)
-	{
-		RightBoostEffect->Activate();
-		LeftBoostEffect->Activate();
-	}
+    if (bShieldActive)
+    {
+        return;
+    }
+    bBoostActive = true;
+    CurrentMovementSpeed = DefaultMovementSpeed * 3;
+    CurrentRotationSpeed = DefaultRotationSpeed / 3;
+    if (RightBoostEffect && LeftBoostEffect)
+    {
+        RightBoostEffect->Activate();
+        LeftBoostEffect->Activate();
+    }
+    if (BoostSound)
+    {
+        BoostSound->Play();
+    }
 }
 
 void APawnTank::DeactivateBoost()
 {
-	if(bShieldActive)
-	{
-		return;
-	}
-	bBoostActive = false;
-	CurrentMovementSpeed = DefaultMovementSpeed;
+    if (bShieldActive)
+    {
+        return;
+    }
+    bBoostActive = false;
+    CurrentMovementSpeed = DefaultMovementSpeed;
     CurrentRotationSpeed = DefaultRotationSpeed;
-	if(RightBoostEffect && LeftBoostEffect)
-	{
-		RightBoostEffect->Deactivate();
-		LeftBoostEffect->Deactivate();
-	}
+    if (RightBoostEffect && LeftBoostEffect)
+    {
+        RightBoostEffect->Deactivate();
+        LeftBoostEffect->Deactivate();
+    }
+    if (BoostSound)
+    {
+        BoostSound->Stop();
+    }
 }
 
 void APawnTank::Fire()

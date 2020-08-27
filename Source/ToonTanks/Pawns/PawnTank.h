@@ -30,14 +30,22 @@ private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
         meta=(AllowPrivateAccess="true"))
     UParticleSystemComponent* ShieldEffect{nullptr};
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
         meta=(AllowPrivateAccess="true"))
     UParticleSystemComponent* RightBoostEffect{nullptr};
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
         meta=(AllowPrivateAccess="true"))
     UParticleSystemComponent* LeftBoostEffect{nullptr};
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
+        meta=(AllowPrivateAccess="true"))
+    UAudioComponent* BoostSound{nullptr};
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects",
+        meta=(AllowPrivateAccess="true"))
+    UAudioComponent* ShieldActiveSound{nullptr};
 
     //VARIABLES
     UPROPERTY()
@@ -72,8 +80,8 @@ private:
     bool bReadyToFire{true};
 
     bool bShieldActive{false};
-    
-	bool bBoostActive{false};
+
+    bool bBoostActive{false};
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
@@ -90,11 +98,11 @@ private:
     void ImpairMovement();
 
     void RestoreMovement();
-	
-	void ActivateBoost();
-	
-	void DeactivateBoost();
-	
+
+    void ActivateBoost();
+
+    void DeactivateBoost();
+
 public:
     APawnTank();
 
@@ -108,8 +116,8 @@ public:
     virtual void HandleDestruction() override;
 
     bool IsAlive() const { return bIsPlayerAlive; }
-	
-	bool IsShieldActive() const { return bShieldActive; }
+
+    bool IsShieldActive() const { return bShieldActive; }
 
 protected:
     // Called when the game starts or when spawned
