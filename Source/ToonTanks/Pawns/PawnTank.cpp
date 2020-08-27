@@ -178,7 +178,7 @@ void APawnTank::DeactivateBoost()
 
 void APawnTank::Fire()
 {
-    if (bReadyToFire && !bShieldActive)
+    if (bReadyToFire && !bShieldActive && !bBoostActive)
     {
         Super::Fire();
         GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
