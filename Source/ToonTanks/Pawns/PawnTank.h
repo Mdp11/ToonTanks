@@ -38,6 +38,8 @@ private:
     FVector MoveDirection{};
     FQuat RotationDirection{};
 
+    FTimerHandle FireRateHandle;
+
     UPROPERTY(EditAnywhere, Category="Effects")
     TSubclassOf<UCameraShake> FireShake;
 

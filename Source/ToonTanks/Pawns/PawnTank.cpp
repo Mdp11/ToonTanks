@@ -90,22 +90,23 @@ void APawnTank::Rotate()
 void APawnTank::ActivateShield()
 {
     bShieldActive = true;
+    ImpareMovement();
+
     if (ShieldEffect)
     {
         ShieldEffect->Activate();
-        ImpareMovement();
-        bReadyToFire = false;
+
     }
 }
 
 void APawnTank::DeactivateShield()
 {
     bShieldActive = false;
+    RestoreMovement();
+
     if (ShieldEffect)
     {
         ShieldEffect->Deactivate();
-        RestoreMovement();
-        bReadyToFire = true;
     }
 }
 
@@ -123,13 +124,12 @@ void APawnTank::RestoreMovement()
 
 void APawnTank::Fire()
 {
-    if (bReadyToFire)
+    if (bReadyToFire && !bShieldActive)
     {
         Super::Fire();
         GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
             FireShake, 0.2f);
         bReadyToFire = false;
-        FTimerHandle FireRateHandle;
         GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
                                                &APawnTank::RestoreFireAbility,
                                                FireRate);
