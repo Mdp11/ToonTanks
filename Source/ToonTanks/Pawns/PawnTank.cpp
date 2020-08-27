@@ -103,6 +103,10 @@ void APawnTank::Rotate()
 
 void APawnTank::ActivateShield()
 {
+	if(bBoostActive)
+	{
+		return;
+	}
     bShieldActive = true;
     ImpairMovement();
 
@@ -115,6 +119,10 @@ void APawnTank::ActivateShield()
 
 void APawnTank::DeactivateShield()
 {
+	if(bBoostActive)
+	{
+		return;
+	}
     bShieldActive = false;
     RestoreMovement();
 
@@ -138,6 +146,11 @@ void APawnTank::RestoreMovement()
 
 void APawnTank::ActivateBoost()
 {
+	if(bShieldActive)
+	{
+		return;
+	}
+	bBoostActive = true;
 	CurrentMovementSpeed = DefaultMovementSpeed * 3;
 	CurrentRotationSpeed = DefaultRotationSpeed / 3;
 	if(RightBoostEffect && LeftBoostEffect)
@@ -149,6 +162,11 @@ void APawnTank::ActivateBoost()
 
 void APawnTank::DeactivateBoost()
 {
+	if(bShieldActive)
+	{
+		return;
+	}
+	bBoostActive = false;
 	CurrentMovementSpeed = DefaultMovementSpeed;
     CurrentRotationSpeed = DefaultRotationSpeed;
 	if(RightBoostEffect && LeftBoostEffect)

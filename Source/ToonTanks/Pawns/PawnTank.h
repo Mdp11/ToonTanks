@@ -72,6 +72,8 @@ private:
     bool bReadyToFire{true};
 
     bool bShieldActive{false};
+    
+	bool bBoostActive{false};
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
