@@ -51,11 +51,11 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
         return;
     }
 
-    if (!OtherActor || OtherActor == this || OtherActor == ProjectileOwner)
+    if (!OtherActor || OtherActor == this)
     {
         return;
     }
-    
+	
     FVector ParticleScale;
 	APawnTank* PlayerTank = Cast<APawnTank>(OtherActor);
     if (!Cast<APawnBase>(OtherActor))
