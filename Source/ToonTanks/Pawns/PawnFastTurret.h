@@ -15,10 +15,9 @@ class TOONTANKS_API APawnFastTurret : public APawnTurret
     GENERATED_BODY()
 
 private:
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
         AllowPrivateAccess="true"))
-    float BurstRate{5.0};
+    float BurstRate{3.0};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
         AllowPrivateAccess="true"))
