@@ -55,22 +55,22 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
     {
         return;
     }
-	
+
     FVector ParticleScale;
-	APawnTank* PlayerTank = Cast<APawnTank>(OtherActor);
+    APawnTank* PlayerTank = Cast<APawnTank>(OtherActor);
     if (!Cast<APawnBase>(OtherActor))
     {
         ParticleScale = {0.2f, 0.2f, 0.2f};
-		UGameplayStatics::PlaySoundAtLocation(this, HitSound,
-                                          GetActorLocation(),
-                                          FRotator::ZeroRotator, 0.2f);
+        UGameplayStatics::PlaySoundAtLocation(this, HitSound,
+                                              GetActorLocation(),
+                                              FRotator::ZeroRotator, 0.2f);
     }
-	else if ((PlayerTank && PlayerTank->IsShieldActive()))
-	{
-		ParticleScale = {0.2f, 0.2f, 0.2f};
-		UGameplayStatics::PlaySoundAtLocation(this, ShieldHitSound,
-                                          GetActorLocation());
-	}
+    else if ((PlayerTank && PlayerTank->IsShieldActive()))
+    {
+        ParticleScale = {0.2f, 0.2f, 0.2f};
+        UGameplayStatics::PlaySoundAtLocation(this, ShieldHitSound,
+                                              GetActorLocation());
+    }
     else
     {
         ParticleScale = {1.f, 1.f, 1.f};
@@ -79,9 +79,9 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
                                       GetInstigatorController(),
                                       this,
                                       DamageType);
-		UGameplayStatics::PlaySoundAtLocation(this, HitSound,
-										  GetActorLocation(),
-										  FRotator::ZeroRotator, 0.2f);
+        UGameplayStatics::PlaySoundAtLocation(this, HitSound,
+                                              GetActorLocation(),
+                                              FRotator::ZeroRotator, 0.2f);
     }
 
     UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
@@ -89,6 +89,5 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
                                              FRotator::ZeroRotator,
                                              ParticleScale);
 
-    
     Destroy();
 }

@@ -148,7 +148,7 @@ void APawnTank::ActivateShield()
     {
         return;
     }
-    
+
     bShieldActive = true;
     ImpairMovement();
 
@@ -168,7 +168,7 @@ void APawnTank::DeactivateShield()
     {
         return;
     }
-    
+
     bShieldActive = false;
     RestoreMovement();
 
@@ -206,17 +206,17 @@ void APawnTank::ActivateBoost()
     {
         return;
     }
-    
+
     BoostMovement();
-    
+
     bBoostActive = true;
-    
+
     if (RightBoostEffect && LeftBoostEffect)
     {
         RightBoostEffect->Activate();
         LeftBoostEffect->Activate();
     }
-    
+
     if (BoostSound)
     {
         BoostSound->Play();
@@ -231,15 +231,15 @@ void APawnTank::DeactivateBoost()
     }
 
     RestoreMovement();
-    
+
     bBoostActive = false;
-    
+
     if (RightBoostEffect && LeftBoostEffect)
     {
         RightBoostEffect->Deactivate();
         LeftBoostEffect->Deactivate();
     }
-    
+
     if (BoostSound)
     {
         BoostSound->Stop();

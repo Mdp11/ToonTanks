@@ -54,7 +54,7 @@ void APawnBase::Fire()
         UE_LOG(LogTemp, Warning, TEXT("Projectile class not set."))
         return;
     }
-    
+
     AProjectileBase* TempProjectile = GetWorld()->
         SpawnActor<AProjectileBase>(ProjectileClass, ProjectileSpawnPoint
                                     ->GetComponentLocation(),
