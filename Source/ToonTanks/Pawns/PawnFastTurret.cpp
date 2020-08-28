@@ -21,5 +21,15 @@ void APawnFastTurret::Tick(float DeltaTime)
 
 void APawnFastTurret::Fire()
 {
-    Super::Fire();
+    if(bReadyToBurst)
+    {
+        Super::Fire();
+        if(++ProjectileCount == ProjectileBurstLimit)
+        {
+            ProjectileCount = 0;
+            bReadyToBurst = false;
+            GetWorld()->GetTimerManager().SetTimer(BurstTimerHandle, this, 
+            &APawnFastTurret::RestoreBurst, BurstRate);
+        }
+    }
 }

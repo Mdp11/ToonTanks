@@ -16,12 +16,25 @@ class TOONTANKS_API APawnFastTurret : public APawnTurret
 
 private:
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
+        AllowPrivateAccess="true"))
+    float BurstRate{5.0};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
+        AllowPrivateAccess="true"))
     int ProjectileBurstLimit{5};
+
     int ProjectileCount{0};
+
+    bool bReadyToBurst{true};
+
+    FTimerHandle BurstTimerHandle;
+
+    void RestoreBurst() { bReadyToBurst = true; }
 
 public:
     APawnFastTurret();
-    
+
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
