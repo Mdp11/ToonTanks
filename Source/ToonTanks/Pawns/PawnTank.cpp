@@ -16,12 +16,18 @@ APawnTank::APawnTank()
     CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     CameraComponent->SetupAttachment(SpringArmComponent);
 
+    IdleSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Idle sound"));
+    IdleSound->SetAutoActivate(false);
+
+    MovingSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Moving sound"));
+    MovingSound->SetAutoActivate(false);
+
     ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>
         (TEXT("Shield effect"));
     ShieldEffect->SetupAttachment(RootComponent);
     ShieldActiveSound = CreateDefaultSubobject<UAudioComponent>(
         TEXT("Shield active sound"));
-    ShieldActiveSound->bAutoActivate = false;
+    ShieldActiveSound->SetAutoActivate(false);
 
     RightBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>
         (TEXT("Right boost Effect"));
@@ -30,7 +36,7 @@ APawnTank::APawnTank()
         (TEXT("Left boost effect"));
     LeftBoostEffect->SetupAttachment(BaseMesh);
     BoostSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Boost sound"));
-    BoostSound->bAutoActivate = false;
+    BoostSound->SetAutoActivate(false);
 
     FireRate = 0.5f;
 }
@@ -49,8 +55,10 @@ void APawnTank::BeginPlay()
 void APawnTank::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    Rotate();
-    Move();
+    const bool Moving = Move();
+    const bool Rotating = Rotate();
+
+    Moving || Rotating ? PlayMovingSound() : StopMovingSound();
 
     if (PlayerControllerRef)
     {
@@ -97,7 +105,7 @@ void APawnTank::CalculateRotationInput(const float Value)
     RotationDirection = FQuat{Rotation};
 }
 
-void APawnTank::Move()
+bool APawnTank::Move()
 {
     if (bBoostActive)
     {
@@ -112,11 +120,13 @@ void APawnTank::Move()
     {
         AddActorLocalOffset(MoveDirection, true);
     }
+    return MoveDirection.X != 0 || bBoostActive;
 }
 
-void APawnTank::Rotate()
+bool APawnTank::Rotate()
 {
     AddActorLocalRotation(RotationDirection, true);
+    return !FMath::IsNearlyEqual(RotationDirection.Z, 0.f, 0.01f);
 }
 
 void APawnTank::ActivateShield()
@@ -220,6 +230,22 @@ void APawnTank::Fire()
         GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
                                                &APawnTank::RestoreFireAbility,
                                                FireRate);
+    }
+}
+
+void APawnTank::PlayMovingSound() const
+{
+    if (!MovingSound->IsPlaying())
+    {
+        MovingSound->Play();
+    }
+}
+
+void APawnTank::StopMovingSound() const
+{
+    if (MovingSound->IsPlaying())
+    {
+        MovingSound->Stop();
     }
 }
 

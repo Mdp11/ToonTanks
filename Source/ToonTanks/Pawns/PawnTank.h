@@ -41,6 +41,14 @@ private:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
         meta=(AllowPrivateAccess="true"))
+    UAudioComponent* IdleSound{nullptr};
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
+        meta=(AllowPrivateAccess="true"))
+    UAudioComponent* MovingSound{nullptr};
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
+        meta=(AllowPrivateAccess="true"))
     UAudioComponent* BoostSound{nullptr};
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects",
@@ -86,22 +94,22 @@ private:
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
 
-    void Move();
-    void Rotate();
+    bool Move();
+    bool Rotate();
 
     void RestoreFireAbility() { bReadyToFire = true; }
 
     void ActivateShield();
-
     void DeactivateShield();
 
     void ImpairMovement();
-
     void RestoreMovement();
 
     void ActivateBoost();
-
     void DeactivateBoost();
+
+    void PlayMovingSound() const;
+    void StopMovingSound() const;
 
 public:
     APawnTank();
