@@ -82,6 +82,22 @@ private:
         AllowPrivateAccess="true"))
     float CurrentRotationSpeed{250.f};
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Skills", meta=(
+        AllowPrivateAccess="true"))
+    float MaximumShield{100.f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Skills", meta=(
+        AllowPrivateAccess="true"))
+    float CurrentShield{100.f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Skills", meta=(
+        AllowPrivateAccess="true"))
+    float MaximumBoost{100.f};
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Skills", meta=(
+        AllowPrivateAccess="true"))
+    float CurrentBoost{100.f};
+
     //FUNCTIONS
     bool bIsPlayerAlive{true};
 
@@ -99,6 +115,7 @@ private:
 
     void ActivateShield();
     void DeactivateShield();
+    void ManageCurrentShield();
 
     void ImpairMovement();
     void RestoreMovement();
@@ -106,6 +123,7 @@ private:
 
     void ActivateBoost();
     void DeactivateBoost();
+    void ManageCurrentBoost();
 
     void PlayMovingSound() const;
     void StopMovingSound() const;
@@ -127,6 +145,18 @@ public:
     bool IsAlive() const { return bIsPlayerAlive; }
 
     bool IsShieldActive() const { return bShieldActive; }
+
+    UFUNCTION(BlueprintCallable)
+    float GetCurrentShield() const { return CurrentShield; }
+
+    UFUNCTION(BlueprintCallable)
+    float GetMaximumShield() const { return MaximumShield; }
+
+    UFUNCTION(BlueprintCallable)
+    float GetCurrentBoost() const { return CurrentBoost; }
+
+    UFUNCTION(BlueprintCallable)
+    float GetMaximumBoost() const { return MaximumBoost; }
 
 protected:
     // Called when the game starts or when spawned

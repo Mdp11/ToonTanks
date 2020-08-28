@@ -66,6 +66,9 @@ void APawnTank::Tick(float DeltaTime)
 
     Moving || Rotating ? PlayMovingSound() : StopMovingSound();
 
+    ManageCurrentShield();
+    ManageCurrentBoost();
+
     if (PlayerControllerRef)
     {
         FHitResult HitResult;
@@ -144,7 +147,7 @@ bool APawnTank::Rotate()
 
 void APawnTank::ActivateShield()
 {
-    if (bBoostActive)
+    if (bBoostActive || CurrentShield <= 25.f)
     {
         return;
     }
@@ -182,6 +185,22 @@ void APawnTank::DeactivateShield()
     }
 }
 
+void APawnTank::ManageCurrentShield()
+{
+    if (bShieldActive)
+    {
+        if ((CurrentShield = FMath::Clamp(CurrentShield - 0.2f, 0.f,
+                                          MaximumShield)) == 0.f)
+        {
+            DeactivateShield();
+        }
+    }
+    else
+    {
+        CurrentShield = FMath::Clamp(CurrentShield + 0.1f, 0.f, MaximumShield);
+    }
+}
+
 void APawnTank::ImpairMovement()
 {
     CurrentMovementSpeed = DefaultMovementSpeed / 3;
@@ -202,7 +221,7 @@ void APawnTank::BoostMovement()
 
 void APawnTank::ActivateBoost()
 {
-    if (bShieldActive)
+    if (bShieldActive || CurrentBoost <= 25.f)
     {
         return;
     }
@@ -243,6 +262,24 @@ void APawnTank::DeactivateBoost()
     if (BoostSound)
     {
         BoostSound->Stop();
+    }
+}
+
+void APawnTank::ManageCurrentBoost()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Current shield = %f"), CurrentShield);
+    UE_LOG(LogTemp, Warning, TEXT("Current boost = %f"), CurrentBoost);
+    if (bBoostActive)
+    {
+        if ((CurrentBoost = FMath::Clamp(CurrentBoost - 0.2f, 0.f,
+                                         MaximumBoost)) == 0.f)
+        {
+            DeactivateBoost();
+        }
+    }
+    else
+    {
+        CurrentBoost = FMath::Clamp(CurrentBoost + 0.1f, 0.f, MaximumBoost);
     }
 }
 

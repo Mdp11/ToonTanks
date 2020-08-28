@@ -78,3 +78,13 @@ void APawnBase::HandleDestruction()
 
     GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(DeathShake);
 }
+
+float APawnBase::GetCurrentHealth() const
+{
+    return HealthComponent->GetCurrentHealth();
+}
+    
+float APawnBase::GetMaximumHealth() const
+{
+    return HealthComponent->GetDefaultHealth();
+}
