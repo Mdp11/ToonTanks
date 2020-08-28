@@ -57,6 +57,12 @@ void APawnBase::Fire()
                                         ProjectileSpawnPoint->
                                         GetComponentRotation());
         TempProjectile->SetOwner(this);
+
+        bReadyToFire = false;
+
+        GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
+                                       &APawnBase::RestoreFireAbility,
+                                       FireRate);
     }
 }
 

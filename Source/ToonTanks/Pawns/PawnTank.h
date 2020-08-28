@@ -85,8 +85,6 @@ private:
     //FUNCTIONS
     bool bIsPlayerAlive{true};
 
-    bool bReadyToFire{true};
-
     bool bShieldActive{false};
 
     bool bBoostActive{false};
@@ -96,8 +94,6 @@ private:
 
     bool Move();
     bool Rotate();
-
-    void RestoreFireAbility() { bReadyToFire = true; }
 
     void ActivateShield();
     void DeactivateShield();

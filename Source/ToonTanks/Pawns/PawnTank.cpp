@@ -226,10 +226,6 @@ void APawnTank::Fire()
         Super::Fire();
         GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
             FireShake, 0.2f);
-        bReadyToFire = false;
-        GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
-                                               &APawnTank::RestoreFireAbility,
-                                               FireRate);
     }
 }
 
