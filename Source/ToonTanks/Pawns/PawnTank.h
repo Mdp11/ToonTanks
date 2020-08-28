@@ -92,6 +92,8 @@ private:
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
 
+    FVector CalculateBoostedMoveInput() const;
+
     bool Move();
     bool Rotate();
 
@@ -100,6 +102,7 @@ private:
 
     void ImpairMovement();
     void RestoreMovement();
+    void BoostMovement();
 
     void ActivateBoost();
     void DeactivateBoost();

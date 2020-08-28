@@ -39,7 +39,6 @@ class TOONTANKS_API APawnBase : public APawn
     UPROPERTY(EditAnywhere, Category="Effects")
     TSubclassOf<UCameraShake> DeathShake;
 
-
 public:
     // Sets default values for this pawn's properties
     APawnBase();
@@ -67,7 +66,7 @@ protected:
     bool bReadyToFire{true};
 
     FTimerHandle FireRateHandle;
-    
+
     virtual void RotateTurret(FVector TargetLocation);
 
     virtual void Fire();

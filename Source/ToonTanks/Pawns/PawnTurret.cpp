@@ -21,26 +21,19 @@ void APawnTurret::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    if (!PlayerPawn || GetDistanceFromPlayer() > FireRange)
+    if (PlayerPawn && GetDistanceFromPlayer() < FireRange)
     {
-        return;
+        RotateTurret(PlayerPawn->GetActorLocation());
+        CheckFireConditions();
     }
-    RotateTurret(PlayerPawn->GetActorLocation());
-    CheckFireConditions();
 }
 
 void APawnTurret::CheckFireConditions()
 {
-    if (!PlayerPawn)
+    if (PlayerPawn && PlayerPawn->IsAlive() &&
+        GetDistanceFromPlayer() <= FireRange && bReadyToFire)
     {
-        return;
-    }
-    if (PlayerPawn->IsAlive() && GetDistanceFromPlayer() <= FireRange)
-    {
-        if (bReadyToFire)
-        {
-            Fire();
-        }
+        Fire();
     }
 }
 

@@ -12,6 +12,7 @@ UCLASS()
 class TOONTANKS_API AProjectileBase : public AActor
 {
     GENERATED_BODY()
+    
 private:
     //COMPONENTS
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
@@ -43,11 +44,11 @@ private:
 
     UPROPERTY(EditAnywhere, Category="Sounds")
     USoundBase* LaunchSound{nullptr};
-    
+
     UPROPERTY(EditAnywhere, Category="Sounds")
     USoundBase* HitSound{nullptr};
-	
-	UPROPERTY(EditAnywhere, Category="Sounds")
+
+    UPROPERTY(EditAnywhere, Category="Sounds")
     USoundBase* ShieldHitSound{nullptr};
 
     //FUNCTIONS

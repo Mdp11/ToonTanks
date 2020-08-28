@@ -23,7 +23,7 @@ private:
     int32 GetTargetTurretsCount() const;
     void HandleGameStart();
     void HandleGameOver(bool PlayerWon);
-    
+
 public:
 
     void ActorDied(AActor* DeadActor);
