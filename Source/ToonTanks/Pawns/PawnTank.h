@@ -107,6 +107,8 @@ private:
     void PlayMovingSound() const;
     void StopMovingSound() const;
 
+    void DeactivateAllSounds() const;
+
 public:
     APawnTank();
 

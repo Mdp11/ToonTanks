@@ -49,6 +49,10 @@ void APawnTank::BeginPlay()
     ShieldEffect->Deactivate();
     RightBoostEffect->Deactivate();
     LeftBoostEffect->Deactivate();
+    if(!GetWorld()->GetName().Equals("MainMenu"))
+    {
+        IdleSound->Activate();
+    }
 }
 
 // Called every frame
@@ -245,10 +249,20 @@ void APawnTank::StopMovingSound() const
     }
 }
 
+void APawnTank::DeactivateAllSounds() const
+{
+    StopMovingSound();
+    IdleSound->Deactivate();
+    ShieldActiveSound->Deactivate();
+    BoostSound->Deactivate();
+}
+
+
 void APawnTank::HandleDestruction()
 {
     Super::HandleDestruction();
     bIsPlayerAlive = false;
+    DeactivateAllSounds();
     SetActorHiddenInGame(true);
     SetActorTickEnabled(false);
 }
