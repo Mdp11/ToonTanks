@@ -42,6 +42,12 @@ public:
 
     virtual void HandleDestruction();
 
+    UFUNCTION(BlueprintCallable)
+    float GetCurrentHealth() const;
+    
+    UFUNCTION(BlueprintCallable)
+    float GetMaximumHealth() const;
+
 protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
