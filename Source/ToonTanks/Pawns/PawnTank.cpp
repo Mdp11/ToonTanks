@@ -147,7 +147,7 @@ bool APawnTank::Rotate()
 
 void APawnTank::ActivateShield()
 {
-    if (bBoostActive || CurrentShield <= 10.f)
+    if (bBoostActive || CurrentShield <= 25.f)
     {
         return;
     }
@@ -221,7 +221,7 @@ void APawnTank::BoostMovement()
 
 void APawnTank::ActivateBoost()
 {
-    if (bShieldActive || CurrentBoost <= 10.f)
+    if (bShieldActive || CurrentBoost <= 25.f)
     {
         return;
     }
