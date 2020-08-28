@@ -12,9 +12,7 @@ APawnTurret::APawnTurret()
 void APawnTurret::BeginPlay()
 {
     Super::BeginPlay();
-    GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this,
-                                           &APawnTurret::CheckFireConditions,
-                                           FireRate, true);
+
     PlayerPawn = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
 }
 
@@ -28,6 +26,7 @@ void APawnTurret::Tick(float DeltaTime)
         return;
     }
     RotateTurret(PlayerPawn->GetActorLocation());
+    CheckFireConditions();
 }
 
 void APawnTurret::CheckFireConditions()
@@ -38,7 +37,13 @@ void APawnTurret::CheckFireConditions()
     }
     if (PlayerPawn->IsAlive() && GetDistanceFromPlayer() <= FireRange)
     {
-        Fire();
+        if(GetWorld()->GetTimerManager().IsTimerActive(FireRateTimerHandle))
+        {
+            return;
+        }
+        GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this,
+                                       &APawnTurret::Fire,
+                                       FireRate, false);        
     }
 }
 
@@ -48,6 +53,14 @@ float APawnTurret::GetDistanceFromPlayer() const
                ? FVector::Dist(PlayerPawn->GetActorLocation(),
                                GetActorLocation())
                : 0.f;
+}
+
+void APawnTurret::Fire()
+{
+    if(PlayerPawn->IsAlive() && GetDistanceFromPlayer() <= FireRange)
+    {
+        Super::Fire();
+    }
 }
 
 void APawnTurret::HandleDestruction()
