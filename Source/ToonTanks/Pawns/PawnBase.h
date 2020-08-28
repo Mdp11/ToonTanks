@@ -26,9 +26,6 @@ class TOONTANKS_API APawnBase : public APawn
     UHealthComponent* HealthComponent{nullptr};
 
     //VARIABLES
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile Type", meta=
-        (AllowPrivateAccess="true"))
-    TSubclassOf<AProjectileBase> ProjectileClass;
 
     UPROPERTY(EditAnywhere, Category="Effects")
     UParticleSystem* DeathParticles{nullptr};
@@ -47,20 +44,20 @@ public:
 
 protected:
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     UStaticMeshComponent* BaseMesh{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     UStaticMeshComponent* TurretMesh{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     USceneComponent* ProjectileSpawnPoint{nullptr};
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile Type", meta=
+    (AllowPrivateAccess="true"))
+    TSubclassOf<AProjectileBase> ProjectileClass;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
-        AllowPrivateAccess="true"))
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
     float FireRate{2.f};
 
     bool bReadyToFire{true};
