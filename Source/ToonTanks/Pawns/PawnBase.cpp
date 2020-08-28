@@ -49,21 +49,24 @@ void APawnBase::RotateTurret(FVector TargetLocation)
 
 void APawnBase::Fire()
 {
-    if (ProjectileClass)
+    if (!ProjectileClass)
     {
-        AProjectileBase* TempProjectile = GetWorld()->
-            SpawnActor<AProjectileBase>(ProjectileClass, ProjectileSpawnPoint
-                                        ->GetComponentLocation(),
-                                        ProjectileSpawnPoint->
-                                        GetComponentRotation());
-        TempProjectile->SetOwner(this);
-
-        bReadyToFire = false;
-
-        GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
-                                       &APawnBase::RestoreFireAbility,
-                                       FireRate);
+        UE_LOG(LogTemp, Warning, TEXT("Projectile class not set."))
+        return;
     }
+    
+    AProjectileBase* TempProjectile = GetWorld()->
+        SpawnActor<AProjectileBase>(ProjectileClass, ProjectileSpawnPoint
+                                    ->GetComponentLocation(),
+                                    ProjectileSpawnPoint->
+                                    GetComponentRotation());
+    TempProjectile->SetOwner(this);
+
+    bReadyToFire = false;
+
+    GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
+                                           &APawnBase::RestoreFireAbility,
+                                           FireRate);
 }
 
 void APawnBase::HandleDestruction()

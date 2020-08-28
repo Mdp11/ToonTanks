@@ -52,31 +52,30 @@ void ATanksGameModeBase::HandleGameStart()
     {
         PlayerControllerRef->SetPlayerEnabledState(false);
     }
-    
+
     if (GetWorld()->GetName().Equals("MainMenu"))
     {
         LaunchMenu();
+        return;
     }
-    else
+
+    GameStart();
+    TargetTurrets = GetTargetTurretsCount();
+    PlayerTank = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
+
+    if (PlayerControllerRef)
     {
-        GameStart();
-        TargetTurrets = GetTargetTurretsCount();
-        PlayerTank = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
+        FTimerHandle PlayerEnableHandle;
+        const FTimerDelegate PlayerEnableDelegate =
+            FTimerDelegate::CreateUObject(
+                PlayerControllerRef,
+                &APlayerControllerBase::SetPlayerEnabledState,
+                true);
 
-        if (PlayerControllerRef)
-        {
-            FTimerHandle PlayerEnableHandle;
-            const FTimerDelegate PlayerEnableDelegate =
-                FTimerDelegate::CreateUObject(
-                    PlayerControllerRef,
-                    &APlayerControllerBase::SetPlayerEnabledState,
-                    true);
-
-            GetWorld()->GetTimerManager().SetTimer(PlayerEnableHandle,
-                                                   PlayerEnableDelegate,
-                                                   StartDelay + 1,
-                                                   false);
-        }
+        GetWorld()->GetTimerManager().SetTimer(PlayerEnableHandle,
+                                               PlayerEnableDelegate,
+                                               StartDelay + 1,
+                                               false);
     }
 }
 

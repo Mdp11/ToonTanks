@@ -20,8 +20,8 @@ void UHealthComponent::BeginPlay()
     Super::BeginPlay();
 
     Health = DefaultHealth;
-    GameModeRef = Cast<ATanksGameModeBase>(UGameplayStatics::GetGameMode
-        (GetWorld()));
+    GameModeRef = Cast<ATanksGameModeBase>(
+        UGameplayStatics::GetGameMode(GetWorld()));
 
     GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
 }
@@ -30,22 +30,23 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage,
                                   const UDamageType* DamageType,
                                   AController* InstigatedBy, AActor* DamagedBy)
 {
-    if(Damage == 0.f || Health <= 0.f)
+    if (Damage == 0.f || Health <= 0.f)
     {
         return;
     }
 
     Health = FMath::Clamp(Health - Damage, 0.f, DefaultHealth);
 
-    if(Health <= 0.f)
+    if (Health <= 0.f)
     {
-        if(GameModeRef)
+        if (GameModeRef)
         {
             GameModeRef->ActorDied(GetOwner());
         }
         else
         {
-            UE_LOG(LogTemp, Warning, TEXT("HealthComponent: Pointer to GameMode not set"));
+            UE_LOG(LogTemp, Warning,
+                   TEXT("HealthComponent: Pointer to GameMode not set"));
         }
     }
 }

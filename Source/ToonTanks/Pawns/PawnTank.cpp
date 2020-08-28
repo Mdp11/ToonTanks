@@ -46,10 +46,12 @@ void APawnTank::BeginPlay()
 {
     Super::BeginPlay();
     PlayerControllerRef = Cast<APlayerController>(GetController());
+
     ShieldEffect->Deactivate();
     RightBoostEffect->Deactivate();
     LeftBoostEffect->Deactivate();
-    if(!GetWorld()->GetName().Equals("MainMenu"))
+
+    if (!GetWorld()->GetName().Equals("MainMenu"))
     {
         IdleSound->Activate();
     }
@@ -109,28 +111,35 @@ void APawnTank::CalculateRotationInput(const float Value)
     RotationDirection = FQuat{Rotation};
 }
 
+FVector APawnTank::CalculateBoostedMoveInput() const
+{
+    return {CurrentMovementSpeed * GetWorld()->DeltaTimeSeconds, 0.f, 0.f};
+}
+
 bool APawnTank::Move()
 {
     if (bBoostActive)
     {
-        const FVector MoveDirectionBoosted{
-            CurrentMovementSpeed * GetWorld()
-            ->DeltaTimeSeconds,
-            0.f, 0.f
-        };
-        AddActorLocalOffset(MoveDirectionBoosted, true);
+        AddActorLocalOffset(CalculateBoostedMoveInput(), true);
     }
     else
     {
         AddActorLocalOffset(MoveDirection, true);
     }
-    return MoveDirection.X != 0 || bBoostActive;
+
+    const bool IsMoving = MoveDirection.X != 0 || bBoostActive;
+
+    return IsMoving;
 }
 
 bool APawnTank::Rotate()
 {
     AddActorLocalRotation(RotationDirection, true);
-    return !FMath::IsNearlyEqual(RotationDirection.Z, 0.f, 0.01f);
+
+    const bool IsRotating = !FMath::IsNearlyEqual(
+        RotationDirection.Z, 0.f, 0.01f);
+
+    return IsRotating;
 }
 
 void APawnTank::ActivateShield()
@@ -139,6 +148,7 @@ void APawnTank::ActivateShield()
     {
         return;
     }
+    
     bShieldActive = true;
     ImpairMovement();
 
@@ -158,6 +168,7 @@ void APawnTank::DeactivateShield()
     {
         return;
     }
+    
     bShieldActive = false;
     RestoreMovement();
 
@@ -183,20 +194,29 @@ void APawnTank::RestoreMovement()
     CurrentRotationSpeed = DefaultRotationSpeed;
 }
 
+void APawnTank::BoostMovement()
+{
+    CurrentMovementSpeed = DefaultMovementSpeed * 3;
+    CurrentRotationSpeed = DefaultRotationSpeed / 3;
+}
+
 void APawnTank::ActivateBoost()
 {
     if (bShieldActive)
     {
         return;
     }
+    
+    BoostMovement();
+    
     bBoostActive = true;
-    CurrentMovementSpeed = DefaultMovementSpeed * 3;
-    CurrentRotationSpeed = DefaultRotationSpeed / 3;
+    
     if (RightBoostEffect && LeftBoostEffect)
     {
         RightBoostEffect->Activate();
         LeftBoostEffect->Activate();
     }
+    
     if (BoostSound)
     {
         BoostSound->Play();
@@ -209,14 +229,17 @@ void APawnTank::DeactivateBoost()
     {
         return;
     }
+
+    RestoreMovement();
+    
     bBoostActive = false;
-    CurrentMovementSpeed = DefaultMovementSpeed;
-    CurrentRotationSpeed = DefaultRotationSpeed;
+    
     if (RightBoostEffect && LeftBoostEffect)
     {
         RightBoostEffect->Deactivate();
         LeftBoostEffect->Deactivate();
     }
+    
     if (BoostSound)
     {
         BoostSound->Stop();
@@ -256,7 +279,6 @@ void APawnTank::DeactivateAllSounds() const
     ShieldActiveSound->Deactivate();
     BoostSound->Deactivate();
 }
-
 
 void APawnTank::HandleDestruction()
 {
