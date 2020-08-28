@@ -79,7 +79,7 @@ void ATanksGameModeBase::HandleGameStart()
     }
 }
 
-void ATanksGameModeBase::HandleGameOver(bool PlayerWon)
+void ATanksGameModeBase::HandleGameOver(const bool PlayerWon)
 {
     GameOver(PlayerWon);
 }

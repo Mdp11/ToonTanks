@@ -31,7 +31,7 @@ APawnBase::APawnBase()
         TEXT("Health component"));
 }
 
-void APawnBase::RotateTurret(FVector TargetLocation)
+void APawnBase::RotateTurret(const FVector TargetLocation)
 {
     const FVector StartLocation{TurretMesh->GetComponentLocation()};
 

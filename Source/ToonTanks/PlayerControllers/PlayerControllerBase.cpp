@@ -2,7 +2,7 @@
 
 #include "PlayerControllerBase.h"
 
-void APlayerControllerBase::SetPlayerEnabledState(bool PlayerEnabled)
+void APlayerControllerBase::SetPlayerEnabledState(const bool PlayerEnabled)
 {
     if (PlayerEnabled)
     {

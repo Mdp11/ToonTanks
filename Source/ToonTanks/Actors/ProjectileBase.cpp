@@ -65,7 +65,7 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
                                               GetActorLocation(),
                                               FRotator::ZeroRotator, 0.2f);
     }
-    else if ((PlayerTank && PlayerTank->IsShieldActive()))
+    else if (PlayerTank && PlayerTank->IsShieldActive())
     {
         ParticleScale = {0.2f, 0.2f, 0.2f};
         UGameplayStatics::PlaySoundAtLocation(this, ShieldHitSound,

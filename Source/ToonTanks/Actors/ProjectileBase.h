@@ -12,6 +12,7 @@ UCLASS()
 class TOONTANKS_API AProjectileBase : public AActor
 {
     GENERATED_BODY()
+    
 private:
     //COMPONENTS
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
