@@ -63,7 +63,11 @@ protected:
         AllowPrivateAccess="true"))
     float FireRate{2.f};
 
+    bool bReadyToFire{true};
+
     virtual void RotateTurret(FVector TargetLocation);
 
     virtual void Fire();
+
+    void RestoreFireAbility() { bReadyToFire = true; }
 };

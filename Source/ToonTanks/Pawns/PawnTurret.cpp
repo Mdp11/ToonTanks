@@ -37,13 +37,20 @@ void APawnTurret::CheckFireConditions()
     }
     if (PlayerPawn->IsAlive() && GetDistanceFromPlayer() <= FireRange)
     {
-        if(GetWorld()->GetTimerManager().IsTimerActive(FireRateTimerHandle))
+        if (bReadyToFire)
         {
-            return;
+            Fire();
         }
-        GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this,
-                                       &APawnTurret::Fire,
-                                       FireRate, false);        
+        else
+        {
+            if (!GetWorld()->GetTimerManager().IsTimerActive(FireRateTimerHandle))
+            {
+                GetWorld()->GetTimerManager().SetTimer(
+                    FireRateTimerHandle, this,
+                    &APawnTurret::RestoreFireAbility,
+                    FireRate, false);
+            }
+        }
     }
 }
 
@@ -57,9 +64,10 @@ float APawnTurret::GetDistanceFromPlayer() const
 
 void APawnTurret::Fire()
 {
-    if(PlayerPawn->IsAlive() && GetDistanceFromPlayer() <= FireRange)
+    if (PlayerPawn->IsAlive() && GetDistanceFromPlayer() <= FireRange)
     {
         Super::Fire();
+        bReadyToFire = false;
     }
 }
 
