@@ -115,7 +115,7 @@ private:
 
     void ActivateShield();
     void DeactivateShield();
-    void ManageCurrentShield();
+    void ManageCurrentShield(float DeltaTime);
 
     void ImpairMovement();
     void RestoreMovement();
@@ -123,7 +123,7 @@ private:
 
     void ActivateBoost();
     void DeactivateBoost();
-    void ManageCurrentBoost();
+    void ManageCurrentBoost(float DeltaTime);
 
     void PlayMovingSound() const;
     void StopMovingSound() const;
