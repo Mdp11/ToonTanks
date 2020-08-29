@@ -6,7 +6,7 @@
 AProjectileFast::AProjectileFast() : AProjectileBase()
 {
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
-        MovementSpeed = 4400.f;
+        MovementSpeed = 12000.f;
 }
 
 void AProjectileFast::BeginPlay()
