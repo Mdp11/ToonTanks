@@ -27,6 +27,8 @@ private:
 
     bool bReadyToBurst{true};
 
+    bool bBursting{false};
+
     FTimerHandle BurstTimerHandle;
 
     void RestoreBurst() { bReadyToBurst = true; }
@@ -41,4 +43,5 @@ protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
     virtual void PreFire() override;
+    virtual void Fire() override;
 };
