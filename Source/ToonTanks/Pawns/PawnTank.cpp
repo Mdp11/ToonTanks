@@ -269,8 +269,6 @@ void APawnTank::DeactivateBoost()
 
 void APawnTank::ManageCurrentBoost(float DeltaTime)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Current shield = %f"), CurrentShield);
-    UE_LOG(LogTemp, Warning, TEXT("Current boost = %f"), CurrentBoost);
     if (bBoostActive)
     {
         if ((CurrentBoost = FMath::Clamp(CurrentBoost - (DeltaTime * 20.f), 0.f,
