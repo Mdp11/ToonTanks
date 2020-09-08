@@ -87,7 +87,7 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     PlayerInputComponent->BindAxis("Turn", this,
                                    &APawnTank::CalculateRotationInput);
     PlayerInputComponent->
-        BindAction("Fire", IE_Pressed, this, &APawnTank::Fire);
+        BindAction("Fire", IE_Pressed, this, &APawnTank::PreFire);
     PlayerInputComponent->
         BindAction("Shield", IE_Pressed, this, &APawnTank::ActivateShield);
     PlayerInputComponent->
@@ -286,11 +286,11 @@ void APawnTank::ManageCurrentBoost(float DeltaTime)
     }
 }
 
-void APawnTank::Fire()
+void APawnTank::PreFire()
 {
     if (bReadyToFire && !bShieldActive && !bBoostActive)
     {
-        Super::Fire();
+        Super::PreFire();
         GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
             FireShake, 0.2f);
     }

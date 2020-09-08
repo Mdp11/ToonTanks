@@ -47,6 +47,20 @@ void APawnBase::RotateTurret(const FVector TargetLocation)
     TurretMesh->SetWorldRotation(TurretRotation);
 }
 
+void APawnBase::PreFire()
+{
+    if (FireChargeSound)
+    {
+        UGameplayStatics::PlaySoundAtLocation(this, FireChargeSound,
+                                              GetActorLocation());
+        FireChargeDelay = FireChargeSound->Duration;
+    }
+    GetWorld()->GetTimerManager().SetTimer(PreFireHandle, this,
+                                           &APawnBase::Fire,
+                                           FireChargeDelay);
+    bReadyToFire = false;
+}
+
 void APawnBase::Fire()
 {
     if (!ProjectileClass)
@@ -62,11 +76,9 @@ void APawnBase::Fire()
                                     GetComponentRotation());
     TempProjectile->SetOwner(this);
 
-    bReadyToFire = false;
-
     GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
                                            &APawnBase::RestoreFireAbility,
-                                           FireRate);
+                                           FireRate - FireChargeDelay);
 }
 
 void APawnBase::HandleDestruction()
@@ -83,7 +95,7 @@ float APawnBase::GetCurrentHealth() const
 {
     return HealthComponent->GetCurrentHealth();
 }
-    
+
 float APawnBase::GetMaximumHealth() const
 {
     return HealthComponent->GetDefaultHealth();

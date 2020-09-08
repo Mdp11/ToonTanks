@@ -66,12 +66,22 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
     float FireRate{2.f};
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+    float FireChargeDelay{0.00001f};
+
+    UPROPERTY(EditAnywhere, Category="Effects")
+    USoundBase* FireChargeSound{nullptr};
+
     bool bReadyToFire{true};
 
     FTimerHandle FireRateHandle;
 
+    FTimerHandle PreFireHandle;
+
     virtual void RotateTurret(FVector TargetLocation);
 
+    virtual void PreFire();
+    
     virtual void Fire();
 
     void RestoreFireAbility() { bReadyToFire = true; }

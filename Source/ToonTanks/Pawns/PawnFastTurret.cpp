@@ -19,11 +19,11 @@ void APawnFastTurret::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
 }
 
-void APawnFastTurret::Fire()
+void APawnFastTurret::PreFire()
 {
     if(bReadyToBurst)
     {
-        Super::Fire();
+        Super::PreFire();
         if(++ProjectileCount == ProjectileBurstLimit)
         {
             ProjectileCount = 0;
