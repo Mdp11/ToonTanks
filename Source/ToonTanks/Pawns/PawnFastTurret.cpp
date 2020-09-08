@@ -46,7 +46,7 @@ void APawnFastTurret::PreFire()
 void APawnFastTurret::Fire()
 {
     bBursting = true;
-    if(bReadyToFire)
+    if (bReadyToFire)
     {
         bReadyToFire = false;
         Super::Fire();
@@ -57,8 +57,8 @@ void APawnFastTurret::Fire()
             if (FireChargeSound)
             {
                 GetWorld()->GetTimerManager().SetTimer(BurstTimerHandle, this,
-                                                       &APawnFastTurret::RestoreBurst,
-                                                       BurstRate - FireChargeSound->Duration);
+                    &APawnFastTurret::RestoreBurst,
+                    BurstRate - FireChargeSound->Duration);
             }
             else
             {
