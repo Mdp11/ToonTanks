@@ -31,15 +31,14 @@ private:
     AllowPrivateAccess="true"))
     USoundBase* PickUpSound{nullptr};
 
-    UPROPERTY()
-    AActor* PlayerActor{nullptr};
-
 public:
     // Sets default values for this actor's properties
     APowerUpBase();
 
 protected:
-    // Called when the game starts or when spawned
+    UPROPERTY()
+    AActor* PlayerActor{nullptr};
+    
     virtual void BeginPlay() override;
 
     UFUNCTION()

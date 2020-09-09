@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/AudioComponent.h"
+#include "ToonTanks/Components/HealthComponent.h"
 
 APawnTank::APawnTank()
 {
@@ -316,6 +317,16 @@ void APawnTank::DeactivateAllSounds() const
     IdleSound->Deactivate();
     ShieldActiveSound->Deactivate();
     BoostSound->Deactivate();
+}
+
+void APawnTank::Heal(const float HealValue) const
+{
+    UHealthComponent* HealthComponentRef =
+        FindComponentByClass<UHealthComponent>();
+    if (HealthComponentRef)
+    {
+        HealthComponentRef->Heal(HealValue);
+    }
 }
 
 void APawnTank::HandleDestruction()

@@ -30,6 +30,8 @@ public:
 
     float GetDefaultHealth() const { return DefaultHealth; }
 
+    void Heal(float HealValue);
+
 protected:
     // Called when the game starts
     virtual void BeginPlay() override;

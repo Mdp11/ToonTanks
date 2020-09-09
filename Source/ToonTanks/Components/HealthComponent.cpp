@@ -50,3 +50,11 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage,
         }
     }
 }
+
+void UHealthComponent::Heal(const float HealValue)
+{
+    if(HealValue > 0.f)
+    {
+        Health = FMath::Clamp(Health + HealValue, 0.f, DefaultHealth);
+    }
+}

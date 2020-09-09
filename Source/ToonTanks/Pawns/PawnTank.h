@@ -158,6 +158,8 @@ public:
     UFUNCTION(BlueprintCallable)
     float GetMaximumBoost() const { return MaximumBoost; }
 
+    void Heal(float HealValue) const;
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
