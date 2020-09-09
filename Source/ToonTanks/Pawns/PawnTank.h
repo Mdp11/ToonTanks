@@ -101,12 +101,17 @@ private:
     //FUNCTIONS
     bool bIsPlayerAlive{true};
 
+    bool bFiring{false};
+
     bool bShieldActive{false};
 
     bool bBoostActive{false};
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
+
+    void ActivateFire() { bFiring = true; }
+    void DeactivateFire() { bFiring = false; }
 
     FVector CalculateBoostedMoveInput() const;
 

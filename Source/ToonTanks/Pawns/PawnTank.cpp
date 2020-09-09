@@ -77,6 +77,11 @@ void APawnTank::Tick(float DeltaTime)
             ECC_Visibility, false, HitResult);
         RotateTurret(HitResult.ImpactPoint);
     }
+
+    if(bFiring)
+    {
+        PreFire();
+    }
 }
 
 // Called to bind functionality to input
@@ -88,7 +93,9 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     PlayerInputComponent->BindAxis("Turn", this,
                                    &APawnTank::CalculateRotationInput);
     PlayerInputComponent->
-        BindAction("Fire", IE_Pressed, this, &APawnTank::PreFire);
+        BindAction("Fire", IE_Pressed, this, &APawnTank::ActivateFire);
+    PlayerInputComponent->
+        BindAction("Fire", IE_Released, this, &APawnTank::DeactivateFire);
     PlayerInputComponent->
         BindAction("Shield", IE_Pressed, this, &APawnTank::ActivateShield);
     PlayerInputComponent->
