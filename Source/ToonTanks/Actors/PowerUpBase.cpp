@@ -13,7 +13,7 @@ APowerUpBase::APowerUpBase()
 
     HitBox = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PowerUp HitBox"));
     SetRootComponent(HitBox);
-    HitBox->OnComponentBeginOverlap.AddDynamic(this, &APowerUpBase::Empower);
+    HitBox->OnComponentBeginOverlap.AddDynamic(this, &APowerUpBase::OnOverlap);
 
     PowerUpMesh = CreateDefaultSubobject<UStaticMeshComponent>(
         TEXT("PowerUp Mesh"));
@@ -33,14 +33,21 @@ void APowerUpBase::BeginPlay()
 
 }
 
-void APowerUpBase::Empower(UPrimitiveComponent* OverlappedComponent,
+void APowerUpBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
                            AActor* OtherActor, UPrimitiveComponent* OtherComp,
                            int32 OtherBodyIndex, bool bFromSweep,
                            const FHitResult& SweepResult)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Overlapped!"));
+    UE_LOG(LogTemp, Warning, TEXT("Overlapping!"));
     if(OtherActor == PlayerActor)
     {
-        UE_LOG(LogTemp, Warning, TEXT("POWER!"));
+        Empower();
+        Destroy();
     }
 }
+
+void APowerUpBase::Empower()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Empower!"));
+}
+
