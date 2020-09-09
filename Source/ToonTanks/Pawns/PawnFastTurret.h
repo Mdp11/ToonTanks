@@ -25,6 +25,8 @@ private:
 
     int ProjectileCount{0};
 
+    float BurstDelay{0.f};
+
     bool bReadyToBurst{true};
 
     bool bBursting{false};

@@ -41,7 +41,7 @@ APawnBase::APawnBase()
 void APawnBase::BeginPlay()
 {
     Super::BeginPlay();
-    if (!Cast<APawnFastTurret>(this) && FireChargeSound && FireChargeSound->Sound)
+    if (FireChargeSound && FireChargeSound->Sound)
     {
         FireChargeDelay = FireChargeSound->Sound->GetDuration();
     }
