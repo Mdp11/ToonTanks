@@ -27,15 +27,14 @@ private:
         AllowPrivateAccess="true"))
     UParticleSystemComponent* PowerUpEffect{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-    AllowPrivateAccess="true"))
-    USoundBase* PickUpSound{nullptr};
-
 public:
     // Sets default values for this actor's properties
     APowerUpBase();
 
 protected:
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+    USoundBase* PickUpSound{nullptr};
+    
     UPROPERTY()
     AActor* PlayerActor{nullptr};
     

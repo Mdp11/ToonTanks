@@ -2,6 +2,8 @@
 
 #include "HealthPack.h"
 
+
+#include "Kismet/GameplayStatics.h"
 #include "ToonTanks/Pawns/PawnTank.h"
 
 void AHealthPack::OnOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -12,6 +14,7 @@ void AHealthPack::OnOverlap(UPrimitiveComponent* OverlappedComponent,
     if (OtherActor == PlayerActor)
     {
         Empower();
+        UGameplayStatics::PlaySoundAtLocation(this, PickUpSound, GetActorLocation());
     }
 }
 

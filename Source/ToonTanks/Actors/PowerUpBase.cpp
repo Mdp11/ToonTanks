@@ -41,6 +41,7 @@ void APowerUpBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
     if(OtherActor == PlayerActor)
     {
         Empower();
+        UGameplayStatics::PlaySoundAtLocation(this, PickUpSound, GetActorLocation());
         Destroy();
     }
 }
