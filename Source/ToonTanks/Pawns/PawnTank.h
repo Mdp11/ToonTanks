@@ -165,6 +165,8 @@ public:
 
     void Heal(float HealValue) const;
 
+    void AdjustFireRate(float FireRateMultiplier);
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;

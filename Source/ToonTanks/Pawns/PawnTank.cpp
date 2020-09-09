@@ -78,7 +78,7 @@ void APawnTank::Tick(float DeltaTime)
         RotateTurret(HitResult.ImpactPoint);
     }
 
-    if(bFiring)
+    if (bFiring)
     {
         PreFire();
     }
@@ -331,6 +331,18 @@ void APawnTank::Heal(const float HealValue) const
     if (HealthComponent)
     {
         HealthComponent->Heal(HealValue);
+    }
+}
+
+void APawnTank::AdjustFireRate(const float FireRateMultiplier)
+{
+    FireRate *= FireRateMultiplier;
+    if (GetWorld()->GetTimerManager().GetTimerRemaining(FireRateHandle) >
+        FireRate)
+    {
+        GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
+                                               &APawnTank::RestoreFireAbility,
+                                               FireRate - FireChargeDelay);
     }
 }
 
