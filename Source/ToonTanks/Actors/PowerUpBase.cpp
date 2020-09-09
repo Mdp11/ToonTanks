@@ -30,8 +30,6 @@ void APowerUpBase::BeginPlay()
 {
     Super::BeginPlay();
     PlayerActor = Cast<AActor>(UGameplayStatics::GetPlayerPawn(this, 0));
-    UE_LOG(LogTemp, Warning, TEXT("START!"));
-
 }
 
 void APowerUpBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
