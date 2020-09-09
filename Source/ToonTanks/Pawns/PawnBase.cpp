@@ -33,6 +33,7 @@ APawnBase::APawnBase()
 
     FireChargeSound = CreateDefaultSubobject<UAudioComponent>(
         TEXT("Fire charge audio component"));
+    FireChargeSound->bAutoActivate = false;
 }
 
 void APawnBase::BeginPlay()
