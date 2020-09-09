@@ -321,11 +321,9 @@ void APawnTank::DeactivateAllSounds() const
 
 void APawnTank::Heal(const float HealValue) const
 {
-    UHealthComponent* HealthComponentRef =
-        FindComponentByClass<UHealthComponent>();
-    if (HealthComponentRef)
+    if (HealthComponent)
     {
-        HealthComponentRef->Heal(HealValue);
+        HealthComponent->Heal(HealValue);
     }
 }
 

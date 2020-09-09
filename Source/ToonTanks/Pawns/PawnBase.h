@@ -21,10 +21,6 @@ class TOONTANKS_API APawnBase : public APawn
         AllowPrivateAccess="true"))
     UCapsuleComponent* CapsuleComponent{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
-    UHealthComponent* HealthComponent{nullptr};
-
     //VARIABLES
 
     UPROPERTY(EditAnywhere, Category="Effects")
@@ -49,7 +45,7 @@ public:
     float GetMaximumHealth() const;
 
 protected:
-
+    
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     UStaticMeshComponent* BaseMesh{nullptr};
 
@@ -62,6 +58,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile Type", meta=
     (AllowPrivateAccess="true"))
     TSubclassOf<AProjectileBase> ProjectileClass;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+    UHealthComponent* HealthComponent{nullptr};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
     float FireRate{2.f};

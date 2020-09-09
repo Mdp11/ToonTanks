@@ -38,7 +38,6 @@ void APowerUpBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
                            int32 OtherBodyIndex, bool bFromSweep,
                            const FHitResult& SweepResult)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Overlapping!"));
     if(OtherActor == PlayerActor)
     {
         Empower();
@@ -48,6 +47,5 @@ void APowerUpBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 
 void APowerUpBase::Empower()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Empower!"));
 }
 
