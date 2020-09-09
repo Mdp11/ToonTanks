@@ -33,9 +33,13 @@ private:
                            int32 OtherBodyIndex, bool bFromSweep,
                            const FHitResult& SweepResult);
 
+    void RotateMesh();
+
 public:
     // Sets default values for this actor's properties
     APowerUpBase();
+
+    virtual void Tick(float DeltaTime) override;
 
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")

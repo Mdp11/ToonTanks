@@ -10,7 +10,7 @@ APowerUpBase::APowerUpBase()
 {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = false;
-    
+
     HitBox = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PowerUp HitBox"));
     SetRootComponent(HitBox);
     HitBox->OnComponentBeginOverlap.AddDynamic(this, &APowerUpBase::OnOverlap);
@@ -22,7 +22,11 @@ APowerUpBase::APowerUpBase()
     PowerUpEffect = CreateDefaultSubobject<UParticleSystemComponent>(
         TEXT("PowerUp Effect"));
     PowerUpEffect->SetupAttachment(PowerUpMesh);
+}
 
+void APowerUpBase::Tick(float DeltaTime)
+{
+    RotateMesh();
 }
 
 // Called when the game starts or when spawned
@@ -33,18 +37,25 @@ void APowerUpBase::BeginPlay()
 }
 
 void APowerUpBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
-                           AActor* OtherActor, UPrimitiveComponent* OtherComp,
-                           int32 OtherBodyIndex, bool bFromSweep,
-                           const FHitResult& SweepResult)
+                             AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                             int32 OtherBodyIndex, bool bFromSweep,
+                             const FHitResult& SweepResult)
 {
-    if(OtherActor == PlayerActor)
+    if (OtherActor == PlayerActor)
     {
         Empower();
-        UGameplayStatics::PlaySoundAtLocation(this, PickUpSound, GetActorLocation());
+        UGameplayStatics::PlaySoundAtLocation(this, PickUpSound,
+                                              GetActorLocation());
     }
+}
+
+void APowerUpBase::RotateMesh()
+{
+    FRotator CurrentRotation = PowerUpMesh->GetComponentRotation();
+    PowerUpMesh->SetWorldRotation(FMath::Lerp(
+        CurrentRotation, CurrentRotation - FRotator{0.f, 1.f, 0.f}, 2.f));
 }
 
 void APowerUpBase::Empower()
 {
 }
-

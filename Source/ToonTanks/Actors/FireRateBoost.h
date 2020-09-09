@@ -12,21 +12,27 @@
 UCLASS()
 class TOONTANKS_API AFireRateBoost : public APowerUpBase
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 private:
-	UPROPERTY(EditAnywhere)
-	float FireRateMultiplier{3.f};
+    UPROPERTY(EditAnywhere)
+    float FireRateMultiplier{3.f};
 
-	UPROPERTY(EditAnywhere)
-	float BoostDuration{3.f};
+    UPROPERTY(EditAnywhere)
+    float BoostDuration{3.f};
 
-	bool bPicked{false};
+    bool bPicked{false};
 
-	FTimerHandle BoostTimer;
+    FTimerHandle BoostTimer;
 
-	void DeactivateFireBoost();
-	
+    void DeactivateFireBoost();
+
+public:
+
+    AFireRateBoost();
+    
+    virtual void Tick(float DeltaTime) override;
+
 protected:
-	virtual void Empower() override;
+    virtual void Empower() override;
 };

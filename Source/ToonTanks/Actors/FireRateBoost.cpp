@@ -4,6 +4,11 @@
 
 #include "ToonTanks/Pawns/PawnTank.h"
 
+AFireRateBoost::AFireRateBoost() : APowerUpBase()
+{
+    PrimaryActorTick.bCanEverTick = true;
+}
+
 void AFireRateBoost::Empower()
 {
     APawnTank* PlayerPawnTank = Cast<APawnTank>(PlayerActor);
@@ -25,4 +30,9 @@ void AFireRateBoost::DeactivateFireBoost()
         PlayerPawnTank->AdjustFireRate(FireRateMultiplier);
         Destroy();
     }
+}
+
+void AFireRateBoost::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
 }
