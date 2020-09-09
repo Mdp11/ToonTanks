@@ -49,9 +49,9 @@ void APowerUpBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
     }
 }
 
-void APowerUpBase::RotateMesh()
+void APowerUpBase::RotateMesh() const
 {
-    FRotator CurrentRotation = PowerUpMesh->GetComponentRotation();
+    const FRotator CurrentRotation = PowerUpMesh->GetComponentRotation();
     PowerUpMesh->SetWorldRotation(FMath::Lerp(
         CurrentRotation, CurrentRotation - FRotator{0.f, 1.f, 0.f}, 2.f));
 }
