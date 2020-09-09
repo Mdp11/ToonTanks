@@ -9,8 +9,8 @@
 APowerUpBase::APowerUpBase()
 {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-    PrimaryActorTick.bCanEverTick = true;
-
+    PrimaryActorTick.bCanEverTick = false;
+    
     HitBox = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PowerUp HitBox"));
     SetRootComponent(HitBox);
     HitBox->OnComponentBeginOverlap.AddDynamic(this, &APowerUpBase::OnOverlap);
@@ -18,10 +18,11 @@ APowerUpBase::APowerUpBase()
     PowerUpMesh = CreateDefaultSubobject<UStaticMeshComponent>(
         TEXT("PowerUp Mesh"));
     PowerUpMesh->SetupAttachment(HitBox);
-
+    PowerUpMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     PowerUpEffect = CreateDefaultSubobject<UParticleSystemComponent>(
         TEXT("PowerUp Effect"));
     PowerUpEffect->SetupAttachment(PowerUpMesh);
+
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +43,6 @@ void APowerUpBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
     {
         Empower();
         UGameplayStatics::PlaySoundAtLocation(this, PickUpSound, GetActorLocation());
-        Destroy();
     }
 }
 
