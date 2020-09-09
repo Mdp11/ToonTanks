@@ -48,6 +48,11 @@ protected:
     UPROPERTY()
     AActor* PlayerActor{nullptr};
 
+    UPROPERTY(EditAnywhere)
+    float BoostDuration{10.f};
+
+    FTimerHandle BoostTimer;
+
     virtual void BeginPlay() override;
 
     virtual void Empower();

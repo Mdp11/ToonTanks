@@ -48,6 +48,8 @@ void APawnTank::BeginPlay()
     Super::BeginPlay();
     PlayerControllerRef = Cast<APlayerController>(GetController());
 
+    DefaultProjectileClass = ProjectileClass;
+
     ShieldEffect->Deactivate();
     RightBoostEffect->Deactivate();
     LeftBoostEffect->Deactivate();

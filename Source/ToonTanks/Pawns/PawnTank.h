@@ -96,6 +96,8 @@ private:
         AllowPrivateAccess="true"))
     float CurrentBoost{100.f};
 
+    TSubclassOf<AProjectileBase> DefaultProjectileClass;
+
     //FUNCTIONS
     bool bIsPlayerAlive{true};
 
@@ -164,6 +166,16 @@ public:
     void Heal(float HealValue) const;
 
     void AdjustFireRate(float FireRateMultiplier);
+
+    void SetProjectileClass(const TSubclassOf<AProjectileBase> NewProjectileClass)
+    {
+        ProjectileClass = NewProjectileClass;
+    }
+
+    void RestoreDefaultProjectileClass()
+    {
+        ProjectileClass = DefaultProjectileClass;
+    }
 
 protected:
     // Called when the game starts or when spawned

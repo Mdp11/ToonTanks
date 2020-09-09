@@ -14,16 +14,16 @@ void AFireRateBoost::Empower()
     APawnTank* PlayerPawnTank = Cast<APawnTank>(PlayerActor);
     if (!bPicked && PlayerPawnTank)
     {
-        PlayerPawnTank->AdjustFireRate(1/FireRateMultiplier);
+        PlayerPawnTank->AdjustFireRate(1 / FireRateMultiplier);
         bPicked = true;
         SetActorHiddenInGame(true);
         GetWorld()->GetTimerManager().SetTimer(BoostTimer, this,
-                                               &AFireRateBoost::DeactivateFireBoost,
+                                               &AFireRateBoost::DeactivateFireRateBoost,
                                                BoostDuration);
     }
 }
 
-void AFireRateBoost::DeactivateFireBoost()
+void AFireRateBoost::DeactivateFireRateBoost()
 {
     if (APawnTank* PlayerPawnTank = Cast<APawnTank>(PlayerActor))
     {

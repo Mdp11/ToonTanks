@@ -18,14 +18,9 @@ private:
     UPROPERTY(EditAnywhere)
     float FireRateMultiplier{3.f};
 
-    UPROPERTY(EditAnywhere)
-    float BoostDuration{3.f};
-
     bool bPicked{false};
 
-    FTimerHandle BoostTimer;
-
-    void DeactivateFireBoost();
+    void DeactivateFireRateBoost();
 
 public:
 
