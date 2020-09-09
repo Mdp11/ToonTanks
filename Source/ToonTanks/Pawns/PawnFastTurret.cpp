@@ -3,7 +3,7 @@
 #include "PawnFastTurret.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "ToonTanks/Actors/ProjectileBase.h"
+#include "Components/AudioComponent.h"
 
 APawnFastTurret::APawnFastTurret()
 {
@@ -28,13 +28,12 @@ void APawnFastTurret::PreFire()
     {
         if (FireChargeSound)
         {
-            UGameplayStatics::PlaySoundAtLocation(this, FireChargeSound,
-                                                  GetActorLocation());
+            FireChargeSound->Play();
         }
 
         GetWorld()->GetTimerManager().SetTimer(PreFireHandle, this,
                                                &APawnFastTurret::Fire,
-                                               FireChargeSound->Duration);
+                                               FireChargeDelay);
         bReadyToBurst = false;
     }
     else if (bBursting)
@@ -58,7 +57,7 @@ void APawnFastTurret::Fire()
             {
                 GetWorld()->GetTimerManager().SetTimer(BurstTimerHandle, this,
                     &APawnFastTurret::RestoreBurst,
-                    BurstRate - FireChargeSound->Duration);
+                    BurstRate - FireChargeDelay);
             }
             else
             {

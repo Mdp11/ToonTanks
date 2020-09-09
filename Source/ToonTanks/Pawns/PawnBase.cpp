@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "ToonTanks/Actors/ProjectileBase.h"
 #include "ToonTanks/Components/HealthComponent.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 APawnBase::APawnBase()
@@ -29,6 +30,18 @@ APawnBase::APawnBase()
 
     HealthComponent = CreateDefaultSubobject<UHealthComponent>(
         TEXT("Health component"));
+
+    FireChargeSound = CreateDefaultSubobject<UAudioComponent>(
+        TEXT("Fire charge audio component"));
+}
+
+void APawnBase::BeginPlay()
+{
+    Super::BeginPlay();
+    if (FireChargeSound && FireChargeSound->Sound)
+    {
+        FireChargeDelay = FireChargeSound->Sound->GetDuration();
+    }
 }
 
 void APawnBase::RotateTurret(const FVector TargetLocation)
@@ -51,10 +64,9 @@ void APawnBase::PreFire()
 {
     if (FireChargeSound)
     {
-        UGameplayStatics::PlaySoundAtLocation(this, FireChargeSound,
-                                              GetActorLocation());
-        FireChargeDelay = FireChargeSound->Duration;
+        FireChargeSound->Play();
     }
+
     GetWorld()->GetTimerManager().SetTimer(PreFireHandle, this,
                                            &APawnBase::Fire,
                                            FireChargeDelay);
@@ -99,4 +111,12 @@ float APawnBase::GetCurrentHealth() const
 float APawnBase::GetMaximumHealth() const
 {
     return HealthComponent->GetDefaultHealth();
+}
+
+void APawnBase::StopChargingSound() const
+{
+    if (FireChargeSound && FireChargeSound->IsPlaying())
+    {
+        FireChargeSound->Stop();
+    }
 }

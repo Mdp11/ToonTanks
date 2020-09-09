@@ -32,8 +32,9 @@ class TOONTANKS_API APawnBase : public APawn
     UPROPERTY(EditAnywhere, Category="Effects")
     TSubclassOf<UCameraShake> DeathShake;
 
+    void StopChargingSound() const;
+
 public:
-    // Sets default values for this pawn's properties
     APawnBase();
 
     virtual void HandleDestruction();
@@ -45,6 +46,8 @@ public:
     float GetMaximumHealth() const;
 
 protected:
+
+    virtual void BeginPlay() override;
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     UStaticMeshComponent* BaseMesh{nullptr};
@@ -68,8 +71,8 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
     float FireChargeDelay{0.00001f};
 
-    UPROPERTY(EditAnywhere, Category="Effects")
-    USoundBase* FireChargeSound{nullptr};
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Effects")
+    UAudioComponent* FireChargeSound{nullptr};
 
     bool bReadyToFire{true};
 
