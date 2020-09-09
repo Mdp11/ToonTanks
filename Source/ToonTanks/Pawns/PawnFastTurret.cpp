@@ -24,10 +24,13 @@ void APawnFastTurret::Tick(float DeltaTime)
 
 void APawnFastTurret::PreFire()
 {
+    UE_LOG(LogTemp, Warning, TEXT("Checking bReadyToBurst..."));
     if (bReadyToBurst)
     {
+        UE_LOG(LogTemp, Warning, TEXT("bReadyToBurst = true"));
         if (FireChargeSound)
         {
+            UE_LOG(LogTemp, Warning, TEXT("FireChargeSound pointer set"))
             FireChargeSound->Play();
         }
 
@@ -38,19 +41,28 @@ void APawnFastTurret::PreFire()
     }
     else if (bBursting)
     {
+        UE_LOG(LogTemp, Warning, TEXT("bBursting = true"))
         Fire();
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("bReadyToBurst = bBursting = false"))
     }
 }
 
 void APawnFastTurret::Fire()
 {
     bBursting = true;
+    UE_LOG(LogTemp, Warning, TEXT("Checking ready to fire..."))
     if (bReadyToFire)
     {
+        UE_LOG(LogTemp, Warning, TEXT("bReadyToFire = true"))
         bReadyToFire = false;
         Super::Fire();
+        UE_LOG(LogTemp, Warning, TEXT("Checking burst reached..."))
         if (++ProjectileCount == ProjectileBurstLimit)
         {
+            UE_LOG(LogTemp, Warning, TEXT("burst reached"))
             ProjectileCount = 0;
             bBursting = false;
             if (FireChargeSound)

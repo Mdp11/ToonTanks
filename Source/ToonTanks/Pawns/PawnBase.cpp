@@ -1,6 +1,8 @@
 // Mattia De Prisco 2020
 
 #include "PawnBase.h"
+
+#include "PawnFastTurret.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ToonTanks/Actors/ProjectileBase.h"
@@ -39,7 +41,7 @@ APawnBase::APawnBase()
 void APawnBase::BeginPlay()
 {
     Super::BeginPlay();
-    if (FireChargeSound && FireChargeSound->Sound)
+    if (!Cast<APawnFastTurret>(this) && FireChargeSound && FireChargeSound->Sound)
     {
         FireChargeDelay = FireChargeSound->Sound->GetDuration();
     }
