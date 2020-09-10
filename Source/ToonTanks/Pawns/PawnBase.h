@@ -16,12 +16,9 @@ class TOONTANKS_API APawnBase : public APawn
 {
     GENERATED_BODY()
 
-    //COMPONENTS
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
     UCapsuleComponent* CapsuleComponent{nullptr};
-
-    //VARIABLES
 
     UPROPERTY(EditAnywhere, Category="Effects")
     UParticleSystem* DeathParticles{nullptr};
@@ -41,14 +38,14 @@ public:
 
     UFUNCTION(BlueprintCallable)
     float GetCurrentHealth() const;
-    
+
     UFUNCTION(BlueprintCallable)
     float GetMaximumHealth() const;
 
 protected:
 
     virtual void BeginPlay() override;
-    
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     UStaticMeshComponent* BaseMesh{nullptr};
 
@@ -57,9 +54,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     USceneComponent* ProjectileSpawnPoint{nullptr};
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile Type", meta=
-    (AllowPrivateAccess="true"))
+        (AllowPrivateAccess="true"))
     TSubclassOf<AProjectileBase> ProjectileClass;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
@@ -83,7 +80,7 @@ protected:
     virtual void RotateTurret(FVector TargetLocation);
 
     virtual void PreFire();
-    
+
     virtual void Fire();
 
     void RestoreFireAbility() { bReadyToFire = true; }

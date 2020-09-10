@@ -1,6 +1,5 @@
 // Copyrights Mattia De Prisco 2020
 
-
 #include "FireRangeBoost.h"
 
 #include "ToonTanks/Pawns/PawnTank.h"
@@ -17,7 +16,7 @@ void AFireRangeBoost::Empower()
         UE_LOG(LogTemp, Warning, TEXT("Boosted projectile class not set."))
         return;
     }
-    
+
     APawnTank* PlayerPawnTank = Cast<APawnTank>(PlayerActor);
     if (!bPicked && PlayerPawnTank)
     {
@@ -43,4 +42,3 @@ void AFireRangeBoost::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 }
-

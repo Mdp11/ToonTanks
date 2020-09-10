@@ -5,10 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
-// Sets default values
 APowerUpBase::APowerUpBase()
 {
-    // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = false;
 
     HitBox = CreateDefaultSubobject<UCapsuleComponent>(TEXT("PowerUp HitBox"));
@@ -29,7 +27,6 @@ void APowerUpBase::Tick(float DeltaTime)
     RotateMesh();
 }
 
-// Called when the game starts or when spawned
 void APowerUpBase::BeginPlay()
 {
     Super::BeginPlay();

@@ -9,16 +9,13 @@
 class USpringArmComponent;
 class UCameraComponent;
 
-/**
- * 
- */
 UCLASS()
 class TOONTANKS_API APawnTank : public APawnBase
 {
     GENERATED_BODY()
 
 private:
-    //COMPONENTS
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
     USpringArmComponent* SpringArmComponent{nullptr};
@@ -55,7 +52,6 @@ private:
         meta=(AllowPrivateAccess="true"))
     UAudioComponent* ShieldActiveSound{nullptr};
 
-    //VARIABLES
     UPROPERTY()
     APlayerController* PlayerControllerRef{nullptr};
 
@@ -98,7 +94,6 @@ private:
 
     TSubclassOf<AProjectileBase> DefaultProjectileClass;
 
-    //FUNCTIONS
     bool bIsPlayerAlive{true};
 
     bool bFiring{false};
@@ -138,10 +133,8 @@ private:
 public:
     APawnTank();
 
-    // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(
         class UInputComponent* PlayerInputComponent) override;
 
@@ -167,7 +160,8 @@ public:
 
     void AdjustFireRate(float FireRateMultiplier);
 
-    void SetProjectileClass(const TSubclassOf<AProjectileBase> NewProjectileClass)
+    void SetProjectileClass(
+        const TSubclassOf<AProjectileBase> NewProjectileClass)
     {
         ProjectileClass = NewProjectileClass;
     }
@@ -178,7 +172,7 @@ public:
     }
 
 protected:
-    // Called when the game starts or when spawned
+
     virtual void BeginPlay() override;
 
     virtual void PreFire() override;

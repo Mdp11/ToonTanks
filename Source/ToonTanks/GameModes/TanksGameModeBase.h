@@ -25,7 +25,6 @@ private:
     void HandleGameOver(bool PlayerWon);
 
 public:
-
     void ActorDied(AActor* DeadActor);
 
 protected:

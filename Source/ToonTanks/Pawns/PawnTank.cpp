@@ -42,7 +42,6 @@ APawnTank::APawnTank()
     FireRate = 0.5f;
 }
 
-// Called when the game starts or when spawned
 void APawnTank::BeginPlay()
 {
     Super::BeginPlay();
@@ -60,7 +59,6 @@ void APawnTank::BeginPlay()
     }
 }
 
-// Called every frame
 void APawnTank::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
@@ -86,7 +84,6 @@ void APawnTank::Tick(float DeltaTime)
     }
 }
 
-// Called to bind functionality to input
 void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -339,7 +336,7 @@ void APawnTank::Heal(const float HealValue) const
 void APawnTank::AdjustFireRate(const float FireRateMultiplier)
 {
     FireRate *= FireRateMultiplier;
- 
+
     if (GetWorld()->GetTimerManager().GetTimerRemaining(FireRateHandle) >
         FireRate)
     {

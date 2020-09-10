@@ -6,9 +6,6 @@
 #include "ToonTanks/Actors/PowerUpBase.h"
 #include "HealthPack.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TOONTANKS_API AHealthPack : public APowerUpBase
 {

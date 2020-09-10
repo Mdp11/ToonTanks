@@ -6,9 +6,6 @@
 #include "ToonTanks/Actors/ProjectileBase.h"
 #include "ProjectileFast.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TOONTANKS_API AProjectileFast : public AProjectileBase
 {

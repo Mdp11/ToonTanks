@@ -2,15 +2,14 @@
 
 #include "HealthPack.h"
 
-
-#include "Kismet/GameplayStatics.h"
 #include "ToonTanks/Pawns/PawnTank.h"
 
 void AHealthPack::Empower()
 {
     if (APawnTank* PlayerPawnTank = Cast<APawnTank>(PlayerActor))
     {
-        if (PlayerPawnTank->GetCurrentHealth() < PlayerPawnTank->GetMaximumHealth())
+        if (PlayerPawnTank->GetCurrentHealth() < PlayerPawnTank->
+            GetMaximumHealth())
         {
             PlayerPawnTank->Heal(HealValue);
             Destroy();

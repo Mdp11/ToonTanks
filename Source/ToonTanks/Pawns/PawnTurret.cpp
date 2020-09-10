@@ -4,11 +4,6 @@
 #include "ToonTanks/Pawns/PawnTank.h"
 #include "Kismet/GameplayStatics.h"
 
-APawnTurret::APawnTurret()
-{
-}
-
-// Called when the game starts or when spawned
 void APawnTurret::BeginPlay()
 {
     Super::BeginPlay();
@@ -16,7 +11,6 @@ void APawnTurret::BeginPlay()
     PlayerPawn = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
 }
 
-// Called every frame
 void APawnTurret::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);

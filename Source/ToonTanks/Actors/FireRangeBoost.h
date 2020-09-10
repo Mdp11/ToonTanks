@@ -8,9 +8,6 @@
 #include "ToonTanks/Actors/PowerUpBase.h"
 #include "FireRangeBoost.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TOONTANKS_API AFireRangeBoost : public APowerUpBase
 {
@@ -26,7 +23,6 @@ private:
     void DeactivateFireRangeBoost();
 
 public:
-
     AFireRangeBoost();
 
     virtual void Tick(float DeltaTime) override;

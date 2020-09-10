@@ -36,7 +36,6 @@ private:
     void RotateMesh() const;
 
 public:
-    // Sets default values for this actor's properties
     APowerUpBase();
 
     virtual void Tick(float DeltaTime) override;
