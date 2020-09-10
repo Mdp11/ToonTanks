@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #include "ToonTanks.h"
 #include "Modules/ModuleManager.h"

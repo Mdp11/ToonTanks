@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #include "PawnFastTurret.h"
 
