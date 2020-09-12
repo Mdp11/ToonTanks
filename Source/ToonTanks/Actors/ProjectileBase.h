@@ -46,7 +46,7 @@ protected:
     USoundBase* ShieldHitSound{nullptr};
 
     UFUNCTION()
-    void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+    virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const
                FHitResult& HitResult);
 
