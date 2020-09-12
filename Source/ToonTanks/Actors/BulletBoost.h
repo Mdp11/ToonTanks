@@ -6,10 +6,10 @@
 
 #include "ProjectileBase.h"
 #include "ToonTanks/Actors/PowerUpBase.h"
-#include "FireRangeBoost.generated.h"
+#include "BulletBoost.generated.h"
 
 UCLASS()
-class TOONTANKS_API AFireRangeBoost : public APowerUpBase
+class TOONTANKS_API ABulletBoost : public APowerUpBase
 {
     GENERATED_BODY()
 
@@ -20,10 +20,10 @@ private:
 
     bool bPicked{false};
 
-    void DeactivateFireRangeBoost();
+    void DeactivateBulletBoost();
 
 public:
-    AFireRangeBoost();
+    ABulletBoost();
 
     virtual void Tick(float DeltaTime) override;
 

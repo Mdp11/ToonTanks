@@ -1,15 +1,15 @@
 // Copyrights Mattia De Prisco 2020
 
-#include "FireRangeBoost.h"
+#include "BulletBoost.h"
 
 #include "ToonTanks/Pawns/PawnTank.h"
 
-AFireRangeBoost::AFireRangeBoost() : APowerUpBase()
+ABulletBoost::ABulletBoost() : APowerUpBase()
 {
     PrimaryActorTick.bCanEverTick = true;
 }
 
-void AFireRangeBoost::Empower()
+void ABulletBoost::Empower()
 {
     if (!BoostedProjectileClass)
     {
@@ -24,12 +24,12 @@ void AFireRangeBoost::Empower()
         bPicked = true;
         SetActorHiddenInGame(true);
         GetWorld()->GetTimerManager().SetTimer(BoostTimer, this,
-                                               &AFireRangeBoost::DeactivateFireRangeBoost,
+                                               &ABulletBoost::DeactivateBulletBoost,
                                                BoostDuration);
     }
 }
 
-void AFireRangeBoost::DeactivateFireRangeBoost()
+void ABulletBoost::DeactivateBulletBoost()
 {
     if (APawnTank* PlayerPawnTank = Cast<APawnTank>(PlayerActor))
     {
@@ -38,7 +38,7 @@ void AFireRangeBoost::DeactivateFireRangeBoost()
     }
 }
 
-void AFireRangeBoost::Tick(float DeltaTime)
+void ABulletBoost::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 }
