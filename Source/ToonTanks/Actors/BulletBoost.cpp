@@ -18,24 +18,11 @@ void ABulletBoost::Empower()
     }
 
     APawnTank* PlayerPawnTank = Cast<APawnTank>(PlayerActor);
-    if (!bPicked && PlayerPawnTank)
+    if (PlayerPawnTank)
     {
-        PlayerPawnTank->SetProjectileClass(BoostedProjectileClass);
-        bPicked = true;
-        SetActorHiddenInGame(true);
-        GetWorld()->GetTimerManager().SetTimer(BoostTimer, this,
-                                               &ABulletBoost::DeactivateBulletBoost,
-                                               BoostDuration);
+        PlayerPawnTank->BoostProjectile(BoostedProjectileClass, BoostDuration);
     }
-}
-
-void ABulletBoost::DeactivateBulletBoost()
-{
-    if (APawnTank* PlayerPawnTank = Cast<APawnTank>(PlayerActor))
-    {
-        PlayerPawnTank->RestoreDefaultProjectileClass();
-        Destroy();
-    }
+    Destroy();
 }
 
 void ABulletBoost::Tick(float DeltaTime)

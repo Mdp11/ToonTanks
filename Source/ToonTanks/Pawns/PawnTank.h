@@ -94,6 +94,12 @@ private:
 
     TSubclassOf<AProjectileBase> DefaultProjectileClass;
 
+    float DefaultFireRate{0.f};
+
+    FTimerHandle BoostedFireRateHandle;
+
+    FTimerHandle BoostedProjectileHandle;
+
     bool bIsPlayerAlive{true};
 
     bool bFiring{false};
@@ -121,9 +127,19 @@ private:
     void RestoreMovement();
     void BoostMovement();
 
-    void ActivateBoost();
-    void DeactivateBoost();
-    void ManageCurrentBoost(float DeltaTime);
+    void ActivateSpeedBoost();
+    void DeactivateSpeedBoost();
+    void ManageCurrentSpeedBoost(float DeltaTime);
+
+    void RestoreDefaultProjectileClass()
+    {
+        ProjectileClass = DefaultProjectileClass;
+    }
+
+    void RestoreFireRate()
+    {
+        FireRate = DefaultFireRate;
+    }
 
     void PlayMovingSound() const;
     void StopMovingSound() const;
@@ -151,25 +167,17 @@ public:
     float GetMaximumShield() const { return MaximumShield; }
 
     UFUNCTION(BlueprintCallable)
-    float GetCurrentBoost() const { return CurrentBoost; }
+    float GetCurrentSpeedBoost() const { return CurrentBoost; }
 
     UFUNCTION(BlueprintCallable)
-    float GetMaximumBoost() const { return MaximumBoost; }
+    float GetMaximumSpeedBoost() const { return MaximumBoost; }
 
     void Heal(float HealValue) const;
 
-    void AdjustFireRate(float FireRateMultiplier);
+    void BoostFireRate(float FireRateMultiplier, const float Duration);
 
-    void SetProjectileClass(
-        const TSubclassOf<AProjectileBase> NewProjectileClass)
-    {
-        ProjectileClass = NewProjectileClass;
-    }
-
-    void RestoreDefaultProjectileClass()
-    {
-        ProjectileClass = DefaultProjectileClass;
-    }
+    void BoostProjectile(const TSubclassOf<AProjectileBase> NewProjectileClass,
+                         const float Duration);
 
 protected:
 

@@ -48,6 +48,7 @@ void APawnTank::BeginPlay()
     PlayerControllerRef = Cast<APlayerController>(GetController());
 
     DefaultProjectileClass = ProjectileClass;
+    DefaultFireRate = FireRate;
 
     ShieldEffect->Deactivate();
     RightBoostEffect->Deactivate();
@@ -68,7 +69,7 @@ void APawnTank::Tick(float DeltaTime)
     Moving || Rotating ? PlayMovingSound() : StopMovingSound();
 
     ManageCurrentShield(DeltaTime);
-    ManageCurrentBoost(DeltaTime);
+    ManageCurrentSpeedBoost(DeltaTime);
 
     if (PlayerControllerRef)
     {
@@ -100,9 +101,10 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     PlayerInputComponent->
         BindAction("Shield", IE_Released, this, &APawnTank::DeactivateShield);
     PlayerInputComponent->
-        BindAction("Boost", IE_Pressed, this, &APawnTank::ActivateBoost);
+        BindAction("Boost", IE_Pressed, this, &APawnTank::ActivateSpeedBoost);
     PlayerInputComponent->
-        BindAction("Boost", IE_Released, this, &APawnTank::DeactivateBoost);
+        BindAction("Boost", IE_Released, this,
+                   &APawnTank::DeactivateSpeedBoost);
 }
 
 void APawnTank::CalculateMoveInput(const float Value)
@@ -228,7 +230,7 @@ void APawnTank::BoostMovement()
     CurrentRotationSpeed = DefaultRotationSpeed / 3;
 }
 
-void APawnTank::ActivateBoost()
+void APawnTank::ActivateSpeedBoost()
 {
     if (bShieldActive || CurrentBoost <= 25.f)
     {
@@ -251,7 +253,7 @@ void APawnTank::ActivateBoost()
     }
 }
 
-void APawnTank::DeactivateBoost()
+void APawnTank::DeactivateSpeedBoost()
 {
     if (bShieldActive)
     {
@@ -274,14 +276,14 @@ void APawnTank::DeactivateBoost()
     }
 }
 
-void APawnTank::ManageCurrentBoost(float DeltaTime)
+void APawnTank::ManageCurrentSpeedBoost(float DeltaTime)
 {
     if (bBoostActive)
     {
         if ((CurrentBoost = FMath::Clamp(CurrentBoost - (DeltaTime * 20.f), 0.f,
                                          MaximumBoost)) == 0.f)
         {
-            DeactivateBoost();
+            DeactivateSpeedBoost();
         }
     }
     else
@@ -333,7 +335,8 @@ void APawnTank::Heal(const float HealValue) const
     }
 }
 
-void APawnTank::AdjustFireRate(const float FireRateMultiplier)
+void APawnTank::BoostFireRate(const float FireRateMultiplier,
+                              const float Duration)
 {
     FireRate *= FireRateMultiplier;
 
@@ -344,6 +347,20 @@ void APawnTank::AdjustFireRate(const float FireRateMultiplier)
                                                &APawnTank::RestoreFireAbility,
                                                FireRate - FireChargeDelay);
     }
+
+    GetWorld()->GetTimerManager().SetTimer(BoostedFireRateHandle, this,
+                                           &APawnTank::RestoreFireRate,
+                                           Duration);
+}
+
+void APawnTank::BoostProjectile(
+    const TSubclassOf<AProjectileBase> NewProjectileClass, const float Duration)
+{
+    ProjectileClass = NewProjectileClass;
+
+    GetWorld()->GetTimerManager().SetTimer(BoostedProjectileHandle, this,
+                                           &APawnTank::RestoreDefaultProjectileClass,
+                                           Duration);
 }
 
 void APawnTank::HandleDestruction()

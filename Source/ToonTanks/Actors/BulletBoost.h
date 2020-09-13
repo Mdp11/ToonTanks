@@ -18,10 +18,6 @@ private:
         (AllowPrivateAccess="true"))
     TSubclassOf<AProjectileBase> BoostedProjectileClass;
 
-    bool bPicked{false};
-
-    void DeactivateBulletBoost();
-
 public:
     ABulletBoost();
 
