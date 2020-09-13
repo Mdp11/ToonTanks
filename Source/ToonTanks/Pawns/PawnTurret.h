@@ -14,11 +14,7 @@ class TOONTANKS_API APawnTurret : public APawnBase
     GENERATED_BODY()
 
 private:
-    UPROPERTY()
-    APawnTank* PlayerPawn{nullptr};
-
     void CheckFireConditions();
-    float GetDistanceFromPlayer() const;
 
 public:
     APawnTurret()
@@ -32,10 +28,17 @@ public:
 protected:
 
     virtual void BeginPlay() override;
+    
+    void HandleFire();
+
+    float GetDistanceFromPlayer() const;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
         AllowPrivateAccess="true"))
     float FireRange{1000.f};
 
     FTimerHandle InitiateFireHandle;
+
+    UPROPERTY()
+    APawnTank* PlayerPawn{nullptr};
 };

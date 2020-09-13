@@ -21,9 +21,25 @@ void APawnFastTurret::BeginPlay()
     }
 }
 
+void APawnFastTurret::InterruptFire()
+{
+    ProjectileCount = 0;
+    bReadyToBurst = true;
+    bBursting = false;
+
+    if(GetWorld()->GetTimerManager().IsTimerActive(PreFireHandle))
+    {
+        GetWorld()->GetTimerManager().ClearTimer(PreFireHandle);
+    }
+}
+
 void APawnFastTurret::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+    if (PlayerPawn && GetDistanceFromPlayer() > FireRange)
+    {
+        InterruptFire();
+    }
 }
 
 void APawnFastTurret::PreFire()

@@ -40,6 +40,7 @@ public:
 protected:
 
     virtual void BeginPlay() override;
+    void InterruptFire();
     virtual void PreFire() override;
     virtual void Fire() override;
 };
