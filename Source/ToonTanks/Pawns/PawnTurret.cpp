@@ -15,10 +15,22 @@ void APawnTurret::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
+    const bool IsLoadingFire = GetWorld()->GetTimerManager().IsTimerActive(
+        InitiateFireHandle);
+
     if (PlayerPawn && GetDistanceFromPlayer() < FireRange)
     {
         RotateTurret(PlayerPawn->GetActorLocation());
-        CheckFireConditions();
+        if (!IsLoadingFire)
+        {
+            GetWorld()->GetTimerManager().SetTimer(InitiateFireHandle, this,
+                                                   &APawnTurret::CheckFireConditions,
+                                                   FireRate);
+        }
+    }
+    else if (IsLoadingFire)
+    {
+        GetWorld()->GetTimerManager().ClearTimer(InitiateFireHandle);
     }
 }
 

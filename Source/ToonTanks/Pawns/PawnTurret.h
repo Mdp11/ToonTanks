@@ -36,4 +36,6 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
         AllowPrivateAccess="true"))
     float FireRange{1000.f};
+
+    FTimerHandle InitiateFireHandle;
 };
