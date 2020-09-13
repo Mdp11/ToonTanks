@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #pragma once
 
@@ -16,16 +16,9 @@ class TOONTANKS_API APawnBase : public APawn
 {
     GENERATED_BODY()
 
-    //COMPONENTS
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
     UCapsuleComponent* CapsuleComponent{nullptr};
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-        AllowPrivateAccess="true"))
-    UHealthComponent* HealthComponent{nullptr};
-
-    //VARIABLES
 
     UPROPERTY(EditAnywhere, Category="Effects")
     UParticleSystem* DeathParticles{nullptr};
@@ -36,19 +29,22 @@ class TOONTANKS_API APawnBase : public APawn
     UPROPERTY(EditAnywhere, Category="Effects")
     TSubclassOf<UCameraShake> DeathShake;
 
+    void StopChargingSound() const;
+
 public:
-    // Sets default values for this pawn's properties
     APawnBase();
 
     virtual void HandleDestruction();
 
     UFUNCTION(BlueprintCallable)
     float GetCurrentHealth() const;
-    
+
     UFUNCTION(BlueprintCallable)
     float GetMaximumHealth() const;
 
 protected:
+
+    virtual void BeginPlay() override;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     UStaticMeshComponent* BaseMesh{nullptr};
@@ -58,10 +54,13 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     USceneComponent* ProjectileSpawnPoint{nullptr};
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile Type", meta=
-    (AllowPrivateAccess="true"))
+        (AllowPrivateAccess="true"))
     TSubclassOf<AProjectileBase> ProjectileClass;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+    UHealthComponent* HealthComponent{nullptr};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
     float FireRate{2.f};
@@ -69,8 +68,8 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
     float FireChargeDelay{0.00001f};
 
-    UPROPERTY(EditAnywhere, Category="Effects")
-    USoundBase* FireChargeSound{nullptr};
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Effects")
+    UAudioComponent* FireChargeSound{nullptr};
 
     bool bReadyToFire{true};
 
@@ -81,7 +80,7 @@ protected:
     virtual void RotateTurret(FVector TargetLocation);
 
     virtual void PreFire();
-    
+
     virtual void Fire();
 
     void RestoreFireAbility() { bReadyToFire = true; }

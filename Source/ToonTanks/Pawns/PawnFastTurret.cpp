@@ -1,20 +1,24 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #include "PawnFastTurret.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "ToonTanks/Actors/ProjectileBase.h"
+#include "Components/AudioComponent.h"
 
 APawnFastTurret::APawnFastTurret()
 {
     FireRate = 0.2f;
     FireRange = 1000.f;
-    FireChargeDelay = 0.f;
 }
 
 void APawnFastTurret::BeginPlay()
 {
     Super::BeginPlay();
+    FireChargeDelay = 0.0001f;
+    if (FireChargeSound && FireChargeSound->Sound)
+    {
+        BurstDelay = FireChargeSound->Sound->Duration;
+    }
 }
 
 void APawnFastTurret::Tick(float DeltaTime)
@@ -28,13 +32,12 @@ void APawnFastTurret::PreFire()
     {
         if (FireChargeSound)
         {
-            UGameplayStatics::PlaySoundAtLocation(this, FireChargeSound,
-                                                  GetActorLocation());
+            FireChargeSound->Play();
         }
 
         GetWorld()->GetTimerManager().SetTimer(PreFireHandle, this,
                                                &APawnFastTurret::Fire,
-                                               FireChargeSound->Duration);
+                                               BurstDelay);
         bReadyToBurst = false;
     }
     else if (bBursting)
@@ -54,17 +57,10 @@ void APawnFastTurret::Fire()
         {
             ProjectileCount = 0;
             bBursting = false;
-            if (FireChargeSound)
-            {
-                GetWorld()->GetTimerManager().SetTimer(BurstTimerHandle, this,
-                    &APawnFastTurret::RestoreBurst,
-                    BurstRate - FireChargeSound->Duration);
-            }
-            else
-            {
-                UE_LOG(LogTemp, Warning,
-                       TEXT("Fire charge sound for fast turret not set."))
-            }
+
+            GetWorld()->GetTimerManager().SetTimer(BurstTimerHandle, this,
+                                                   &APawnFastTurret::RestoreBurst,
+                                                   BurstRate - BurstDelay);
         }
     }
 }

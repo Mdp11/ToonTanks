@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #pragma once
 
@@ -6,9 +6,6 @@
 #include "ToonTanks/Pawns/PawnTurret.h"
 #include "PawnFastTurret.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TOONTANKS_API APawnFastTurret : public APawnTurret
 {
@@ -25,6 +22,8 @@ private:
 
     int ProjectileCount{0};
 
+    float BurstDelay{0.f};
+
     bool bReadyToBurst{true};
 
     bool bBursting{false};
@@ -36,11 +35,10 @@ private:
 public:
     APawnFastTurret();
 
-    // Called every frame
     virtual void Tick(float DeltaTime) override;
 
 protected:
-    // Called when the game starts or when spawned
+
     virtual void BeginPlay() override;
     virtual void PreFire() override;
     virtual void Fire() override;

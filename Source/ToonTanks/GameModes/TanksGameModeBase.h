@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #pragma once
 
@@ -25,7 +25,6 @@ private:
     void HandleGameOver(bool PlayerWon);
 
 public:
-
     void ActorDied(AActor* DeadActor);
 
 protected:

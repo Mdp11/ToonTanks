@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #pragma once
 
@@ -8,9 +8,6 @@
 
 class APawnTank;
 
-/**
- * 
- */
 UCLASS()
 class TOONTANKS_API APawnTurret : public APawnBase
 {
@@ -24,18 +21,19 @@ private:
     float GetDistanceFromPlayer() const;
 
 public:
-    APawnTurret();
+    APawnTurret()
+    {
+    }
 
-    // Called every frame
     virtual void Tick(float DeltaTime) override;
 
     virtual void HandleDestruction() override;
 
 protected:
-    // Called when the game starts or when spawned
+
     virtual void BeginPlay() override;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(
-    AllowPrivateAccess="true"))
+        AllowPrivateAccess="true"))
     float FireRange{1000.f};
 };

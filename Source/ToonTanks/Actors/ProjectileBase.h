@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #pragma once
 
@@ -14,7 +14,7 @@ class TOONTANKS_API AProjectileBase : public AActor
     GENERATED_BODY()
 
 protected:
-    //COMPONENTS
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     UProjectileMovementComponent* ProjectileMovement{nullptr};
 
@@ -24,7 +24,6 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     UParticleSystemComponent* ProjectileTrailEffect{nullptr};
 
-    //VARIABLES
     UPROPERTY(EditDefaultsOnly, Category="Damage")
     TSubclassOf<UDamageType> DamageType;
 
@@ -46,17 +45,15 @@ protected:
     UPROPERTY(EditAnywhere, Category="Sounds")
     USoundBase* ShieldHitSound{nullptr};
 
-    //FUNCTIONS
     UFUNCTION()
-    void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+    virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const
                FHitResult& HitResult);
 
 public:
-    // Sets default values for this actor's properties
     AProjectileBase();
 
 protected:
-    // Called when the game starts or when spawned
+
     virtual void BeginPlay() override;
 };

@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #include "PawnTank.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/AudioComponent.h"
+#include "ToonTanks/Components/HealthComponent.h"
 
 APawnTank::APawnTank()
 {
@@ -41,11 +42,13 @@ APawnTank::APawnTank()
     FireRate = 0.5f;
 }
 
-// Called when the game starts or when spawned
 void APawnTank::BeginPlay()
 {
     Super::BeginPlay();
     PlayerControllerRef = Cast<APlayerController>(GetController());
+
+    DefaultProjectileClass = ProjectileClass;
+    DefaultFireRate = FireRate;
 
     ShieldEffect->Deactivate();
     RightBoostEffect->Deactivate();
@@ -57,7 +60,6 @@ void APawnTank::BeginPlay()
     }
 }
 
-// Called every frame
 void APawnTank::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
@@ -67,7 +69,7 @@ void APawnTank::Tick(float DeltaTime)
     Moving || Rotating ? PlayMovingSound() : StopMovingSound();
 
     ManageCurrentShield(DeltaTime);
-    ManageCurrentBoost(DeltaTime);
+    ManageCurrentSpeedBoost(DeltaTime);
 
     if (PlayerControllerRef)
     {
@@ -76,9 +78,13 @@ void APawnTank::Tick(float DeltaTime)
             ECC_Visibility, false, HitResult);
         RotateTurret(HitResult.ImpactPoint);
     }
+
+    if (bFiring)
+    {
+        PreFire();
+    }
 }
 
-// Called to bind functionality to input
 void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -87,15 +93,18 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     PlayerInputComponent->BindAxis("Turn", this,
                                    &APawnTank::CalculateRotationInput);
     PlayerInputComponent->
-        BindAction("Fire", IE_Pressed, this, &APawnTank::PreFire);
+        BindAction("Fire", IE_Pressed, this, &APawnTank::ActivateFire);
+    PlayerInputComponent->
+        BindAction("Fire", IE_Released, this, &APawnTank::DeactivateFire);
     PlayerInputComponent->
         BindAction("Shield", IE_Pressed, this, &APawnTank::ActivateShield);
     PlayerInputComponent->
         BindAction("Shield", IE_Released, this, &APawnTank::DeactivateShield);
     PlayerInputComponent->
-        BindAction("Boost", IE_Pressed, this, &APawnTank::ActivateBoost);
+        BindAction("Boost", IE_Pressed, this, &APawnTank::ActivateSpeedBoost);
     PlayerInputComponent->
-        BindAction("Boost", IE_Released, this, &APawnTank::DeactivateBoost);
+        BindAction("Boost", IE_Released, this,
+                   &APawnTank::DeactivateSpeedBoost);
 }
 
 void APawnTank::CalculateMoveInput(const float Value)
@@ -221,7 +230,7 @@ void APawnTank::BoostMovement()
     CurrentRotationSpeed = DefaultRotationSpeed / 3;
 }
 
-void APawnTank::ActivateBoost()
+void APawnTank::ActivateSpeedBoost()
 {
     if (bShieldActive || CurrentBoost <= 25.f)
     {
@@ -244,7 +253,7 @@ void APawnTank::ActivateBoost()
     }
 }
 
-void APawnTank::DeactivateBoost()
+void APawnTank::DeactivateSpeedBoost()
 {
     if (bShieldActive)
     {
@@ -267,14 +276,14 @@ void APawnTank::DeactivateBoost()
     }
 }
 
-void APawnTank::ManageCurrentBoost(float DeltaTime)
+void APawnTank::ManageCurrentSpeedBoost(float DeltaTime)
 {
     if (bBoostActive)
     {
         if ((CurrentBoost = FMath::Clamp(CurrentBoost - (DeltaTime * 20.f), 0.f,
                                          MaximumBoost)) == 0.f)
         {
-            DeactivateBoost();
+            DeactivateSpeedBoost();
         }
     }
     else
@@ -316,6 +325,42 @@ void APawnTank::DeactivateAllSounds() const
     IdleSound->Deactivate();
     ShieldActiveSound->Deactivate();
     BoostSound->Deactivate();
+}
+
+void APawnTank::Heal(const float HealValue) const
+{
+    if (HealthComponent)
+    {
+        HealthComponent->Heal(HealValue);
+    }
+}
+
+void APawnTank::BoostFireRate(const float FireRateMultiplier,
+                              const float Duration)
+{
+    FireRate *= FireRateMultiplier;
+
+    if (GetWorld()->GetTimerManager().GetTimerRemaining(FireRateHandle) >
+        FireRate)
+    {
+        GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
+                                               &APawnTank::RestoreFireAbility,
+                                               FireRate - FireChargeDelay);
+    }
+
+    GetWorld()->GetTimerManager().SetTimer(BoostedFireRateHandle, this,
+                                           &APawnTank::RestoreFireRate,
+                                           Duration);
+}
+
+void APawnTank::BoostProjectile(
+    const TSubclassOf<AProjectileBase> NewProjectileClass, const float Duration)
+{
+    ProjectileClass = NewProjectileClass;
+
+    GetWorld()->GetTimerManager().SetTimer(BoostedProjectileHandle, this,
+                                           &APawnTank::RestoreDefaultProjectileClass,
+                                           Duration);
 }
 
 void APawnTank::HandleDestruction()

@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #pragma once
 
@@ -9,16 +9,13 @@
 class USpringArmComponent;
 class UCameraComponent;
 
-/**
- * 
- */
 UCLASS()
 class TOONTANKS_API APawnTank : public APawnBase
 {
     GENERATED_BODY()
 
 private:
-    //COMPONENTS
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
     USpringArmComponent* SpringArmComponent{nullptr};
@@ -55,14 +52,11 @@ private:
         meta=(AllowPrivateAccess="true"))
     UAudioComponent* ShieldActiveSound{nullptr};
 
-    //VARIABLES
     UPROPERTY()
     APlayerController* PlayerControllerRef{nullptr};
 
     FVector MoveDirection{};
     FQuat RotationDirection{};
-
-    FTimerHandle FireRateHandle;
 
     UPROPERTY(EditAnywhere, Category="Effects")
     TSubclassOf<UCameraShake> FireShake;
@@ -98,8 +92,17 @@ private:
         AllowPrivateAccess="true"))
     float CurrentBoost{100.f};
 
-    //FUNCTIONS
+    TSubclassOf<AProjectileBase> DefaultProjectileClass;
+
+    float DefaultFireRate{0.f};
+
+    FTimerHandle BoostedFireRateHandle;
+
+    FTimerHandle BoostedProjectileHandle;
+
     bool bIsPlayerAlive{true};
+
+    bool bFiring{false};
 
     bool bShieldActive{false};
 
@@ -107,6 +110,9 @@ private:
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
+
+    void ActivateFire() { bFiring = true; }
+    void DeactivateFire() { bFiring = false; }
 
     FVector CalculateBoostedMoveInput() const;
 
@@ -121,9 +127,19 @@ private:
     void RestoreMovement();
     void BoostMovement();
 
-    void ActivateBoost();
-    void DeactivateBoost();
-    void ManageCurrentBoost(float DeltaTime);
+    void ActivateSpeedBoost();
+    void DeactivateSpeedBoost();
+    void ManageCurrentSpeedBoost(float DeltaTime);
+
+    void RestoreDefaultProjectileClass()
+    {
+        ProjectileClass = DefaultProjectileClass;
+    }
+
+    void RestoreFireRate()
+    {
+        FireRate = DefaultFireRate;
+    }
 
     void PlayMovingSound() const;
     void StopMovingSound() const;
@@ -133,10 +149,8 @@ private:
 public:
     APawnTank();
 
-    // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(
         class UInputComponent* PlayerInputComponent) override;
 
@@ -153,13 +167,20 @@ public:
     float GetMaximumShield() const { return MaximumShield; }
 
     UFUNCTION(BlueprintCallable)
-    float GetCurrentBoost() const { return CurrentBoost; }
+    float GetCurrentSpeedBoost() const { return CurrentBoost; }
 
     UFUNCTION(BlueprintCallable)
-    float GetMaximumBoost() const { return MaximumBoost; }
+    float GetMaximumSpeedBoost() const { return MaximumBoost; }
+
+    void Heal(float HealValue) const;
+
+    void BoostFireRate(float FireRateMultiplier, const float Duration);
+
+    void BoostProjectile(const TSubclassOf<AProjectileBase> NewProjectileClass,
+                         const float Duration);
 
 protected:
-    // Called when the game starts or when spawned
+
     virtual void BeginPlay() override;
 
     virtual void PreFire() override;

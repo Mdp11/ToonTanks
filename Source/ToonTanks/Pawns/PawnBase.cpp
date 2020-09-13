@@ -1,15 +1,15 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #include "PawnBase.h"
+
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ToonTanks/Actors/ProjectileBase.h"
 #include "ToonTanks/Components/HealthComponent.h"
+#include "Components/AudioComponent.h"
 
-// Sets default values
 APawnBase::APawnBase()
 {
-    // Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
     CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(
@@ -29,6 +29,19 @@ APawnBase::APawnBase()
 
     HealthComponent = CreateDefaultSubobject<UHealthComponent>(
         TEXT("Health component"));
+
+    FireChargeSound = CreateDefaultSubobject<UAudioComponent>(
+        TEXT("Fire charge audio component"));
+    FireChargeSound->bAutoActivate = false;
+}
+
+void APawnBase::BeginPlay()
+{
+    Super::BeginPlay();
+    if (FireChargeSound && FireChargeSound->Sound)
+    {
+        FireChargeDelay = FireChargeSound->Sound->GetDuration();
+    }
 }
 
 void APawnBase::RotateTurret(const FVector TargetLocation)
@@ -51,10 +64,9 @@ void APawnBase::PreFire()
 {
     if (FireChargeSound)
     {
-        UGameplayStatics::PlaySoundAtLocation(this, FireChargeSound,
-                                              GetActorLocation());
-        FireChargeDelay = FireChargeSound->Duration;
+        FireChargeSound->Play();
     }
+
     GetWorld()->GetTimerManager().SetTimer(PreFireHandle, this,
                                            &APawnBase::Fire,
                                            FireChargeDelay);
@@ -99,4 +111,12 @@ float APawnBase::GetCurrentHealth() const
 float APawnBase::GetMaximumHealth() const
 {
     return HealthComponent->GetDefaultHealth();
+}
+
+void APawnBase::StopChargingSound() const
+{
+    if (FireChargeSound && FireChargeSound->IsPlaying())
+    {
+        FireChargeSound->Stop();
+    }
 }

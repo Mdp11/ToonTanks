@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #pragma once
 
@@ -17,21 +17,23 @@ class TOONTANKS_API UHealthComponent : public UActorComponent
 private:
     UPROPERTY(EditAnywhere)
     float DefaultHealth = 100.f;
+
     float Health = 0.f;
 
     UPROPERTY()
     ATanksGameModeBase* GameModeRef{nullptr};
 
 public:
-    // Sets default values for this component's properties
     UHealthComponent();
 
     float GetCurrentHealth() const { return Health; }
 
     float GetDefaultHealth() const { return DefaultHealth; }
 
+    void Heal(float HealValue);
+
 protected:
-    // Called when the game starts
+
     virtual void BeginPlay() override;
 
     UFUNCTION()

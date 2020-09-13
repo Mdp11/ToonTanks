@@ -1,4 +1,4 @@
-// Mattia De Prisco 2020
+// Copyrights Mattia De Prisco 2020
 
 #pragma once
 
@@ -6,9 +6,6 @@
 #include "GameFramework/PlayerController.h"
 #include "PlayerControllerBase.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TOONTANKS_API APlayerControllerBase : public APlayerController
 {
