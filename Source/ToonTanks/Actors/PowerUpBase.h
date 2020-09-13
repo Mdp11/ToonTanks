@@ -41,7 +41,7 @@ public:
     virtual void Tick(float DeltaTime) override;
 
 protected:
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+    UPROPERTY(EditAnywhere, Category="Components")
     USoundBase* PickUpSound{nullptr};
 
     UPROPERTY()

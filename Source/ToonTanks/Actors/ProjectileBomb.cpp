@@ -44,6 +44,10 @@ void AProjectileBomb::OnHit(UPrimitiveComponent* HitComponent,
                                              FRotator::ZeroRotator, {
                                                  6.5f, 6.5f, 6.5f
                                              });
+											 
+	UGameplayStatics::PlaySoundAtLocation(this, HitSound,
+	GetActorLocation(),
+	  FRotator::ZeroRotator, 0.2f);
 
     TSet<APawnBase*> HitPawns;
     for (const auto& Component : ComponentsInExplosionRange)
