@@ -17,6 +17,10 @@ class TOONTANKS_API AProjectileShock : public AProjectileBase
     GENERATED_BODY()
 
 private:
+
+    UPROPERTY(EditAnywhere, meta=(AllowPrivateAcess="true"))
+    UParticleSystemComponent* ShockPropagation{nullptr};
+    
     UPROPERTY(EditAnywhere)
     float PropagationRate{0.5f};
 

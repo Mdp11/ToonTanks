@@ -1,13 +1,19 @@
 // Copyrights Mattia De Prisco 2020
 
 #include "ProjectileShock.h"
+
+#include <stdbool.h>
+
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "ToonTanks/Pawns/PawnBase.h"
 
 AProjectileShock::AProjectileShock() : AProjectileBase()
 {
+    ShockPropagation = CreateDefaultSubobject<UParticleSystemComponent>(
+        "Shock propagation effect");
+    ShockPropagation->SetAutoActivate(false);
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
         MovementSpeed = 2500.f;
     Damage = 20;
@@ -20,6 +26,7 @@ void AProjectileShock::BeginPlay()
 
 void AProjectileShock::PropagateShock(AActor* OtherActor)
 {
+    ShockPropagation->Deactivate();
     TArray<FHitResult> ComponentsInExplosionRange;
 
     GetWorld()->SweepMultiByChannel(ComponentsInExplosionRange,
@@ -101,8 +108,25 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
                                                ShockDelegate,
                                                PropagationRate, false);
 
-        SetActorHiddenInGame(true);
+        ProjectileMesh->SetHiddenInGame(true);
+        ProjectileTrailEffect->SetHiddenInGame(true);
         SetActorEnableCollision(false);
+
+        FLatentActionInfo LatentInfo;
+        LatentInfo.CallbackTarget = this;
+
+        if (ShockPropagation)
+        {
+            ShockPropagation->Activate();
+            auto ShockPropagationTargetLocation = OtherPawn->GetActorLocation();
+            ShockPropagationTargetLocation.Z = 10.f;
+            UKismetSystemLibrary::MoveComponentTo(ShockPropagation,
+                                                  ShockPropagationTargetLocation,
+                                                  FRotator::ZeroRotator, false,
+                                                  false, 0.1f, false,
+                                                  EMoveComponentAction::Move,
+                                                  LatentInfo);
+        }
     }
     else
     {
