@@ -24,38 +24,44 @@ void AProjectileShock::BeginPlay()
     Super::BeginPlay();
 }
 
-void AProjectileShock::PropagateShock(AActor* OtherActor)
+APawnBase* AProjectileShock::GetClosestPawn(AActor* ShockPropagatingActor) const
+{
+    TArray<FHitResult> ComponentsInExplosionRange;
+
+    GetWorld()->SweepMultiByChannel(ComponentsInExplosionRange,
+                                    ShockPropagatingActor->GetActorLocation(),
+                                    ShockPropagatingActor->GetActorLocation(),
+                                    FQuat::Identity, ECC_Pawn,
+                                    FCollisionShape::MakeSphere(500.f));
+
+    ComponentsInExplosionRange.Sort(
+        [&ShockPropagatingActor](const auto& Lhs, const auto& Rhs)
+        {
+            return FVector::Dist(ShockPropagatingActor->GetActorLocation(),
+                                 Lhs.GetActor()->GetActorLocation()) <
+                FVector::Dist(ShockPropagatingActor->GetActorLocation(),
+                              Rhs.GetActor()->GetActorLocation());
+        });
+
+    for (const auto& HitResult : ComponentsInExplosionRange)
+    {
+        const auto PawnHit = Cast<APawnBase>(HitResult.GetActor());
+        if (PawnHit && !AlreadyShockedPawns.Contains(PawnHit))
+        {
+            return PawnHit;
+        }
+    }
+
+    return nullptr;
+}
+
+void AProjectileShock::PropagateShock(AActor* ShockPropagatingActor)
 {
     ShockPropagation->Deactivate();
     TArray<FHitResult> ComponentsInExplosionRange;
 
-    GetWorld()->SweepMultiByChannel(ComponentsInExplosionRange,
-                                    OtherActor->GetActorLocation(),
-                                    OtherActor->GetActorLocation(),
-                                    FQuat::Identity, ECC_Pawn,
-                                    FCollisionShape::MakeSphere(500.f));
+    APawnBase* ClosestPawn = GetClosestPawn(ShockPropagatingActor);
 
-    APawnBase* ClosestPawn = nullptr;
-
-    ComponentsInExplosionRange.Sort([this](const auto& Lhs, const auto& Rhs)
-    {
-        return GetDistanceTo(Lhs.GetActor()) < GetDistanceTo(Rhs.GetActor());
-    });
-
-    for (const auto& Component : ComponentsInExplosionRange)
-    {
-        const auto PawnHit = Cast<APawnBase>(Component.GetActor());
-        if (PawnHit && !AlreadyShockedPawns.Contains(PawnHit))
-        {
-            ClosestPawn = PawnHit;
-            break;
-        }
-    }
-    APawnBase* HitPawn = Cast<APawnBase>(OtherActor);
-    if (HitPawn)
-    {
-        AlreadyShockedPawns.Add(HitPawn);
-    }
     if (ClosestPawn)
     {
         OnHit(nullptr, ClosestPawn, nullptr, FVector{}, FHitResult{});
@@ -83,7 +89,7 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
         return;
     }
 
-    FVector SparkLocation{};
+    FVector SparkLocation;
 
     UGameplayStatics::PlaySoundAtLocation(this, HitSound,
                                           GetActorLocation(),

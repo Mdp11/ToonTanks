@@ -20,13 +20,15 @@ private:
 
     UPROPERTY(EditAnywhere, meta=(AllowPrivateAcess="true"))
     UParticleSystemComponent* ShockPropagation{nullptr};
-    
+
     UPROPERTY(EditAnywhere)
     float PropagationRate{0.5f};
 
     TArray<APawnBase*> AlreadyShockedPawns;
 
     FTimerHandle ShockHandle;
+
+    APawnBase* GetClosestPawn(AActor* ShockPropagatingActor) const;
 
 public:
     AProjectileShock();
@@ -35,7 +37,7 @@ protected:
     virtual void BeginPlay() override;
 
     UFUNCTION()
-    void PropagateShock(AActor* OtherActor);
+    void PropagateShock(AActor* ShockPropagatingActor);
 
     virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                        UPrimitiveComponent* OtherComponent,
