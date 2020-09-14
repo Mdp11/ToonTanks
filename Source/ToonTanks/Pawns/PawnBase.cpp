@@ -49,8 +49,7 @@ void APawnBase::RotateTurret(const FVector TargetLocation)
     const FVector StartLocation{TurretMesh->GetComponentLocation()};
 
     const FVector TargetLocationClean{
-        TargetLocation.X, TargetLocation.Y,
-        StartLocation.Z
+        TargetLocation.X, TargetLocation.Y, StartLocation.Z
     };
 
     const FRotator TurretRotation{
@@ -68,8 +67,7 @@ void APawnBase::PreFire()
     }
 
     GetWorld()->GetTimerManager().SetTimer(PreFireHandle, this,
-                                           &APawnBase::Fire,
-                                           FireChargeDelay);
+                                           &APawnBase::Fire, FireChargeDelay);
     bReadyToFire = false;
 }
 
@@ -81,11 +79,9 @@ void APawnBase::Fire()
         return;
     }
 
-    AProjectileBase* TempProjectile = GetWorld()->
-        SpawnActor<AProjectileBase>(ProjectileClass, ProjectileSpawnPoint
-                                    ->GetComponentLocation(),
-                                    ProjectileSpawnPoint->
-                                    GetComponentRotation());
+    AProjectileBase* TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(
+        ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(),
+        ProjectileSpawnPoint->GetComponentRotation());
     TempProjectile->SetOwner(this);
 
     GetWorld()->GetTimerManager().SetTimer(FireRateHandle, this,
@@ -97,8 +93,7 @@ void APawnBase::HandleDestruction()
 {
     UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticles,
                                              GetActorLocation());
-    UGameplayStatics::PlaySoundAtLocation(this, DeathSound,
-                                          GetActorLocation());
+    UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
 
     GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(DeathShake);
 }

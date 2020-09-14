@@ -21,8 +21,8 @@ AProjectileBase::AProjectileBase()
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
         MovementSpeed;
 
-    ProjectileTrailEffect = CreateDefaultSubobject<UParticleSystemComponent>
-        (TEXT("Trail effect"));
+    ProjectileTrailEffect = CreateDefaultSubobject<UParticleSystemComponent>(
+        TEXT("Trail effect"));
     ProjectileTrailEffect->SetupAttachment(RootComponent);
 
     InitialLifeSpan = 10.f;
@@ -73,8 +73,7 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
         ParticleScale = {1.f, 1.f, 1.f};
         UGameplayStatics::ApplyDamage(OtherActor, Damage,
                                       ProjectileOwner->
-                                      GetInstigatorController(),
-                                      this,
+                                      GetInstigatorController(), this,
                                       DamageType);
         UGameplayStatics::PlaySoundAtLocation(this, HitSound,
                                               GetActorLocation(),

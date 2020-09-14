@@ -27,7 +27,7 @@ void APawnFastTurret::InterruptFire()
     bReadyToBurst = true;
     bBursting = false;
 
-    if(GetWorld()->GetTimerManager().IsTimerActive(PreFireHandle))
+    if (GetWorld()->GetTimerManager().IsTimerActive(PreFireHandle))
     {
         GetWorld()->GetTimerManager().ClearTimer(PreFireHandle);
     }

@@ -40,8 +40,8 @@ void APawnTurret::HandleFire()
 
 void APawnTurret::CheckFireConditions()
 {
-    if (PlayerPawn && PlayerPawn->IsAlive() &&
-        GetDistanceFromPlayer() <= FireRange && bReadyToFire)
+    if (PlayerPawn && PlayerPawn->IsAlive() && GetDistanceFromPlayer() <=
+        FireRange && bReadyToFire)
     {
         PreFire();
     }

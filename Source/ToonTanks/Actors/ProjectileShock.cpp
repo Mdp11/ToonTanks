@@ -91,8 +91,7 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
 
     FVector SparkLocation;
 
-    UGameplayStatics::PlaySoundAtLocation(this, HitSound,
-                                          GetActorLocation(),
+    UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation(),
                                           FRotator::ZeroRotator, 0.2f);
 
     APawnBase* OtherPawn = Cast<APawnBase>(OtherActor);
@@ -102,16 +101,13 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
         AlreadyShockedPawns.Add(OtherPawn);
         UGameplayStatics::ApplyDamage(OtherActor, Damage,
                                       ProjectileOwner->
-                                      GetInstigatorController(),
-                                      this,
+                                      GetInstigatorController(), this,
                                       DamageType);
 
-        const FTimerDelegate ShockDelegate = FTimerDelegate::CreateUObject(this,
-            &AProjectileShock::PropagateShock,
-            OtherActor);
+        const FTimerDelegate ShockDelegate = FTimerDelegate::CreateUObject(
+            this, &AProjectileShock::PropagateShock, OtherActor);
 
-        GetWorld()->GetTimerManager().SetTimer(ShockHandle,
-                                               ShockDelegate,
+        GetWorld()->GetTimerManager().SetTimer(ShockHandle, ShockDelegate,
                                                PropagationRate, false);
 
         ProjectileMesh->SetHiddenInGame(true);
@@ -142,6 +138,7 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
 
     UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
                                              SparkLocation,
-                                             FRotator::ZeroRotator,
-                                             {1.f, 1.f, 1.f});
+                                             FRotator::ZeroRotator, {
+                                                 1.f, 1.f, 1.f
+                                             });
 }

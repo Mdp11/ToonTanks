@@ -47,8 +47,8 @@ protected:
 
     UFUNCTION()
     virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
-               UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const
-               FHitResult& HitResult);
+                       UPrimitiveComponent* OtherComponent,
+                       FVector NormalImpulse, const FHitResult& HitResult);
 
 public:
     AProjectileBase();
