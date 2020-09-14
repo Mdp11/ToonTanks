@@ -10,7 +10,7 @@ AProjectileShock::AProjectileShock() : AProjectileBase()
 {
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
         MovementSpeed = 12000.f;
-    Damage = 1000;
+    Damage = 20;
 }
 
 void AProjectileShock::BeginPlay()
@@ -34,7 +34,7 @@ void AProjectileShock::PropagateShock(AActor* OtherActor)
     {
         return GetDistanceTo(Lhs.GetActor()) < GetDistanceTo(Rhs.GetActor());
     });
-    
+
     for (const auto& Component : ComponentsInExplosionRange)
     {
         const auto PawnHit = Cast<APawnBase>(Component.GetActor());
@@ -61,6 +61,10 @@ void AProjectileShock::PropagateShock(AActor* OtherActor)
                                                  SparkDirection);
         OnHit(nullptr, ClosestPawn, nullptr, FVector{}, FHitResult{});
     }
+    else
+    {
+        Destroy();
+    }
 }
 
 void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
@@ -68,14 +72,47 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
                              UPrimitiveComponent* OtherComponent,
                              FVector NormalImpulse, const FHitResult& HitResult)
 {
-    Super::OnHit(HitComponent, OtherActor, OtherComponent, NormalImpulse,
-                 HitResult);
+    AActor* ProjectileOwner = GetOwner();
 
-    ShockDelegate = FTimerDelegate::CreateUObject(this,
-                                                  &AProjectileShock::PropagateShock,
-                                                  OtherActor);
+    if (!ProjectileOwner)
+    {
+        return;
+    }
 
-    GetWorld()->GetTimerManager().SetTimer(ShockHandle,
-                                           ShockDelegate,
-                                           1.f, false);
+    if (!OtherActor || OtherActor == this)
+    {
+        return;
+    }
+
+    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
+                                             GetActorLocation(),
+                                             FRotator::ZeroRotator,
+                                             {1.f, 1.f, 1.f});
+
+    UGameplayStatics::PlaySoundAtLocation(this, HitSound,
+                                          GetActorLocation(),
+                                          FRotator::ZeroRotator, 0.2f);
+
+    if (Cast<APawnBase>(OtherActor))
+    {
+        UGameplayStatics::ApplyDamage(OtherActor, Damage,
+                                      ProjectileOwner->
+                                      GetInstigatorController(),
+                                      this,
+                                      DamageType);
+
+        ShockDelegate = FTimerDelegate::CreateUObject(this,
+            &AProjectileShock::PropagateShock,
+            OtherActor);
+
+        GetWorld()->GetTimerManager().SetTimer(ShockHandle,
+                                               ShockDelegate,
+                                               1.f, false);
+
+        SetActorHiddenInGame(true);
+    }
+    else
+    {
+        Destroy();
+    }
 }

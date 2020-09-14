@@ -25,7 +25,7 @@ AProjectileBase::AProjectileBase()
         (TEXT("Trail effect"));
     ProjectileTrailEffect->SetupAttachment(RootComponent);
 
-    InitialLifeSpan = 3.0f;
+    InitialLifeSpan = 10.f;
 }
 
 void AProjectileBase::BeginPlay()
