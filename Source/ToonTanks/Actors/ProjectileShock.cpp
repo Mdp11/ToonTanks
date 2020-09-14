@@ -2,8 +2,6 @@
 
 #include "ProjectileShock.h"
 
-#include <stdbool.h>
-
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -26,15 +24,15 @@ void AProjectileShock::BeginPlay()
 
 APawnBase* AProjectileShock::GetClosestPawn(AActor* ShockPropagatingActor) const
 {
-    TArray<FHitResult> ComponentsInExplosionRange;
+    TArray<FHitResult> ComponentsInShockRange;
 
-    GetWorld()->SweepMultiByChannel(ComponentsInExplosionRange,
+    GetWorld()->SweepMultiByChannel(ComponentsInShockRange,
                                     ShockPropagatingActor->GetActorLocation(),
                                     ShockPropagatingActor->GetActorLocation(),
                                     FQuat::Identity, ECC_Pawn,
                                     FCollisionShape::MakeSphere(ShockRadius));
 
-    ComponentsInExplosionRange.Sort(
+    ComponentsInShockRange.Sort(
         [&ShockPropagatingActor](const auto& Lhs, const auto& Rhs)
         {
             return FVector::Dist(ShockPropagatingActor->GetActorLocation(),
@@ -43,7 +41,7 @@ APawnBase* AProjectileShock::GetClosestPawn(AActor* ShockPropagatingActor) const
                               Rhs.GetActor()->GetActorLocation());
         });
 
-    for (const auto& HitResult : ComponentsInExplosionRange)
+    for (const auto& HitResult : ComponentsInShockRange)
     {
         const auto PawnHit = Cast<APawnBase>(HitResult.GetActor());
         if (PawnHit && !AlreadyShockedPawns.Contains(PawnHit))

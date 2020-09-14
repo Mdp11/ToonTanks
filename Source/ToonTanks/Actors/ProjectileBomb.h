@@ -6,6 +6,8 @@
 #include "ToonTanks/Actors/ProjectileBase.h"
 #include "ProjectileBomb.generated.h"
 
+class APawnBase;
+
 /**
  * 
  */
@@ -24,4 +26,11 @@ protected:
                        UPrimitiveComponent* OtherComponent,
                        FVector NormalImpulse,
                        const FHitResult& HitResult) override;
+private:
+    UPROPERTY(EditAnywhere)
+    float BombRadius{300.f};
+
+    void GetPawnsInExplosionRange(TSet<APawnBase*>& OutPawnsInExplosionRange,
+                                  const FVector ExplosionCenter) const;
+    void PlayExplosionEffects() const;
 };
