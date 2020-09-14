@@ -29,6 +29,12 @@ void AProjectileShock::PropagateShock(AActor* OtherActor)
                                     FCollisionShape::MakeSphere(500.f));
 
     APawnBase* ClosestPawn = nullptr;
+
+    ComponentsInExplosionRange.Sort([this](const auto& Lhs, const auto& Rhs)
+    {
+        return GetDistanceTo(Lhs.GetActor()) < GetDistanceTo(Rhs.GetActor());
+    });
+    
     for (const auto& Component : ComponentsInExplosionRange)
     {
         const auto PawnHit = Cast<APawnBase>(Component.GetActor());
