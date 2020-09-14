@@ -9,7 +9,7 @@
 AProjectileShock::AProjectileShock() : AProjectileBase()
 {
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
-        MovementSpeed = 12000.f;
+        MovementSpeed = 2500.f;
     Damage = 20;
 }
 
@@ -76,10 +76,7 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
         return;
     }
 
-    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
-                                             OtherActor->GetActorLocation(),
-                                             FRotator::ZeroRotator,
-                                             {1.f, 1.f, 1.f});
+    FVector SparkLocation{};
 
     UGameplayStatics::PlaySoundAtLocation(this, HitSound,
                                           GetActorLocation(),
@@ -88,6 +85,7 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
     APawnBase* OtherPawn = Cast<APawnBase>(OtherActor);
     if (OtherPawn)
     {
+        SparkLocation = OtherActor->GetActorLocation();
         AlreadyShockedPawns.Add(OtherPawn);
         UGameplayStatics::ApplyDamage(OtherActor, Damage,
                                       ProjectileOwner->
@@ -108,6 +106,12 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
     }
     else
     {
+        SparkLocation = GetActorLocation();
         Destroy();
     }
+
+    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
+                                             SparkLocation,
+                                             FRotator::ZeroRotator,
+                                             {1.f, 1.f, 1.f});
 }

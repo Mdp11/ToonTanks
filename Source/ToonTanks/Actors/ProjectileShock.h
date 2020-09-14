@@ -18,9 +18,6 @@ class TOONTANKS_API AProjectileShock : public AProjectileBase
 
 private:
     UPROPERTY(EditAnywhere)
-    UParticleSystem* ShockPropagationEffect{nullptr};
-
-    UPROPERTY(EditAnywhere)
     float PropagationRate{0.5f};
 
     TArray<APawnBase*> AlreadyShockedPawns;
