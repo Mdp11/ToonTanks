@@ -20,11 +20,12 @@ private:
     UPROPERTY(EditAnywhere)
     UParticleSystem* ShockPropagationEffect{nullptr};
 
+    UPROPERTY(EditAnywhere)
+    float PropagationRate{0.5f};
+
     TArray<APawnBase*> AlreadyShockedPawns;
 
     FTimerHandle ShockHandle;
-
-    FTimerDelegate ShockDelegate;
 
 public:
     AProjectileShock();

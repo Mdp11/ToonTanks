@@ -51,14 +51,6 @@ void AProjectileShock::PropagateShock(AActor* OtherActor)
     }
     if (ClosestPawn)
     {
-        const FRotator SparkDirection =
-            UKismetMathLibrary::GetDirectionUnitVector(
-                GetActorLocation(), ClosestPawn->GetActorLocation()).Rotation();
-
-        UGameplayStatics::SpawnEmitterAtLocation(this,
-                                                 ShockPropagationEffect,
-                                                 GetActorLocation(),
-                                                 SparkDirection);
         OnHit(nullptr, ClosestPawn, nullptr, FVector{}, FHitResult{});
     }
     else
@@ -85,7 +77,7 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
     }
 
     UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
-                                             GetActorLocation(),
+                                             OtherActor->GetActorLocation(),
                                              FRotator::ZeroRotator,
                                              {1.f, 1.f, 1.f});
 
@@ -93,23 +85,26 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
                                           GetActorLocation(),
                                           FRotator::ZeroRotator, 0.2f);
 
-    if (Cast<APawnBase>(OtherActor))
+    APawnBase* OtherPawn = Cast<APawnBase>(OtherActor);
+    if (OtherPawn)
     {
+        AlreadyShockedPawns.Add(OtherPawn);
         UGameplayStatics::ApplyDamage(OtherActor, Damage,
                                       ProjectileOwner->
                                       GetInstigatorController(),
                                       this,
                                       DamageType);
 
-        ShockDelegate = FTimerDelegate::CreateUObject(this,
+        const FTimerDelegate ShockDelegate = FTimerDelegate::CreateUObject(this,
             &AProjectileShock::PropagateShock,
             OtherActor);
 
         GetWorld()->GetTimerManager().SetTimer(ShockHandle,
                                                ShockDelegate,
-                                               1.f, false);
+                                               PropagationRate, false);
 
         SetActorHiddenInGame(true);
+        SetActorEnableCollision(false);
     }
     else
     {
