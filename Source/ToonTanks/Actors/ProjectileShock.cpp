@@ -32,7 +32,7 @@ APawnBase* AProjectileShock::GetClosestPawn(AActor* ShockPropagatingActor) const
                                     ShockPropagatingActor->GetActorLocation(),
                                     ShockPropagatingActor->GetActorLocation(),
                                     FQuat::Identity, ECC_Pawn,
-                                    FCollisionShape::MakeSphere(500.f));
+                                    FCollisionShape::MakeSphere(ShockRadius));
 
     ComponentsInExplosionRange.Sort(
         [&ShockPropagatingActor](const auto& Lhs, const auto& Rhs)

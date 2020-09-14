@@ -28,6 +28,9 @@ private:
 
     FTimerHandle ShockHandle;
 
+    UPROPERTY(EditAnywhere)
+    float ShockRadius{300.f};
+
     APawnBase* GetClosestPawn(AActor* ShockPropagatingActor) const;
 
 public:
