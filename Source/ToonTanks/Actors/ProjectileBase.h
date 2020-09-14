@@ -56,4 +56,7 @@ public:
 protected:
 
     virtual void BeginPlay() override;
+    
+    void PlayHitEffects(FVector& HitParticleScale,
+                        USoundBase* SoundToPlay) const;
 };
