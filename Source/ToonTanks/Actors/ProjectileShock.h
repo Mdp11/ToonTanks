@@ -8,9 +8,7 @@
 #include "ProjectileShock.generated.h"
 
 class APawnBase;
-/**
- * 
- */
+
 UCLASS()
 class TOONTANKS_API AProjectileShock : public AProjectileBase
 {
@@ -24,7 +22,8 @@ private:
     UPROPERTY(EditAnywhere)
     float PropagationRate{0.5f};
 
-    TArray<APawnBase*> AlreadyShockedPawns;
+    UPROPERTY()
+    TArray<AActor*> AlreadyShockedEnemies;
 
     FTimerHandle ShockHandle;
 
@@ -41,6 +40,9 @@ protected:
 
     UFUNCTION()
     void PropagateShock(AActor* ShockPropagatingActor);
+    void PropagateShockEffect(AActor* ShockedEnemy);
+    void DematerializeProjectile();
+    void PlayShockEffects(FVector& SparkLocation) const;
 
     virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                        UPrimitiveComponent* OtherComponent,

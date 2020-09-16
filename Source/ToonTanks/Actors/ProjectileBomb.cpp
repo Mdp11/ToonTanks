@@ -14,8 +14,8 @@ AProjectileBomb::AProjectileBomb() : AProjectileBase()
 void AProjectileBomb::BeginPlay()
 {
     Super::BeginPlay();
-}
 
+}
 void AProjectileBomb::GetPawnsInExplosionRange(
     TSet<APawnBase*>& OutPawnsInExplosionRange,
     const FVector ExplosionCenter) const
@@ -70,5 +70,6 @@ void AProjectileBomb::OnHit(UPrimitiveComponent* HitComponent,
 
         PlayExplosionEffects();
     }
+
     Destroy();
 }

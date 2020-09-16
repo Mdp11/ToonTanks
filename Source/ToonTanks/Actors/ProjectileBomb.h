@@ -8,9 +8,6 @@
 
 class APawnBase;
 
-/**
- * 
- */
 UCLASS()
 class TOONTANKS_API AProjectileBomb : public AProjectileBase
 {
