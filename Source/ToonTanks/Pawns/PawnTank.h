@@ -24,32 +24,32 @@ private:
         AllowPrivateAccess="true"))
     UCameraComponent* CameraComponent{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
-        meta=(AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
     UParticleSystemComponent* ShieldEffect{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
-        meta=(AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
     UParticleSystemComponent* RightBoostEffect{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
-        meta=(AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
     UParticleSystemComponent* LeftBoostEffect{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
-        meta=(AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
     UAudioComponent* IdleSound{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
-        meta=(AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
     UAudioComponent* MovingSound{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components",
-        meta=(AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+        AllowPrivateAccess="true"))
     UAudioComponent* BoostSound{nullptr};
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects",
-        meta=(AllowPrivateAccess="true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects", meta=(
+        AllowPrivateAccess="true"))
     UAudioComponent* ShieldActiveSound{nullptr};
 
     UPROPERTY()
@@ -174,10 +174,10 @@ public:
 
     void Heal(float HealValue) const;
 
-    void BoostFireRate(float FireRateMultiplier, const float Duration);
+    void BoostFireRate(float FireRateMultiplier, float Duration);
 
-    void BoostProjectile(const TSubclassOf<AProjectileBase> NewProjectileClass,
-                         const float Duration);
+    void BoostProjectile(TSubclassOf<AProjectileBase> NewProjectileClass,
+                         float Duration);
 
 protected:
 

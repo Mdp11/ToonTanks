@@ -21,8 +21,8 @@ AProjectileBase::AProjectileBase()
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
         MovementSpeed;
 
-    ProjectileTrailEffect = CreateDefaultSubobject<UParticleSystemComponent>
-        (TEXT("Trail effect"));
+    ProjectileTrailEffect = CreateDefaultSubobject<UParticleSystemComponent>(
+        TEXT("Trail effect"));
     ProjectileTrailEffect->SetupAttachment(RootComponent);
 
     InitialLifeSpan = 10.f;
@@ -36,6 +36,18 @@ void AProjectileBase::BeginPlay()
                                           GetActorLocation());
 }
 
+void AProjectileBase::PlayHitEffects(FVector& HitParticleScale,
+                                     USoundBase* SoundToPlay) const
+{
+    UGameplayStatics::PlaySoundAtLocation(this, SoundToPlay, GetActorLocation(),
+                                          FRotator::ZeroRotator);
+
+    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
+                                             GetActorLocation(),
+                                             FRotator::ZeroRotator,
+                                             HitParticleScale);
+}
+
 void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
                             AActor* OtherActor,
                             UPrimitiveComponent* OtherComponent,
@@ -43,48 +55,30 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
 {
     AActor* ProjectileOwner = GetOwner();
 
-    if (!ProjectileOwner)
+    if (ProjectileOwner && OtherActor && OtherActor != this)
     {
-        return;
-    }
+        FVector HitParticleScale{0.2f, 0.2f, 0.2f};
+        APawnTank* PlayerTank = Cast<APawnTank>(OtherActor);
+        USoundBase* SoundToPlay = HitSound;
 
-    if (!OtherActor || OtherActor == this)
-    {
-        return;
-    }
+        if (Cast<APawnBase>(OtherActor))
+        {
+            if (PlayerTank && PlayerTank->IsShieldActive())
+            {
+                SoundToPlay = ShieldHitSound;
+            }
+            else
+            {
+                HitParticleScale = {1.f, 1.f, 1.f};
+                UGameplayStatics::ApplyDamage(OtherActor, Damage,
+                                              ProjectileOwner->
+                                              GetInstigatorController(), this,
+                                              DamageType);
+            }
+        }
 
-    FVector ParticleScale;
-    APawnTank* PlayerTank = Cast<APawnTank>(OtherActor);
-    if (!Cast<APawnBase>(OtherActor))
-    {
-        ParticleScale = {0.2f, 0.2f, 0.2f};
-        UGameplayStatics::PlaySoundAtLocation(this, HitSound,
-                                              GetActorLocation(),
-                                              FRotator::ZeroRotator, 0.2f);
+        PlayHitEffects(HitParticleScale, SoundToPlay);
     }
-    else if (PlayerTank && PlayerTank->IsShieldActive())
-    {
-        ParticleScale = {0.2f, 0.2f, 0.2f};
-        UGameplayStatics::PlaySoundAtLocation(this, ShieldHitSound,
-                                              GetActorLocation());
-    }
-    else
-    {
-        ParticleScale = {1.f, 1.f, 1.f};
-        UGameplayStatics::ApplyDamage(OtherActor, Damage,
-                                      ProjectileOwner->
-                                      GetInstigatorController(),
-                                      this,
-                                      DamageType);
-        UGameplayStatics::PlaySoundAtLocation(this, HitSound,
-                                              GetActorLocation(),
-                                              FRotator::ZeroRotator, 0.2f);
-    }
-
-    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
-                                             GetActorLocation(),
-                                             FRotator::ZeroRotator,
-                                             ParticleScale);
 
     Destroy();
 }

@@ -23,18 +23,18 @@ APawnTank::APawnTank()
     MovingSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Moving sound"));
     MovingSound->SetAutoActivate(false);
 
-    ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>
-        (TEXT("Shield effect"));
+    ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>(
+        TEXT("Shield effect"));
     ShieldEffect->SetupAttachment(RootComponent);
     ShieldActiveSound = CreateDefaultSubobject<UAudioComponent>(
         TEXT("Shield active sound"));
     ShieldActiveSound->SetAutoActivate(false);
 
-    RightBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>
-        (TEXT("Right boost Effect"));
+    RightBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>(
+        TEXT("Right boost Effect"));
     RightBoostEffect->SetupAttachment(BaseMesh);
-    LeftBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>
-        (TEXT("Left boost effect"));
+    LeftBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>(
+        TEXT("Left boost effect"));
     LeftBoostEffect->SetupAttachment(BaseMesh);
     BoostSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Boost sound"));
     BoostSound->SetAutoActivate(false);
@@ -92,19 +92,18 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
                                    &APawnTank::CalculateMoveInput);
     PlayerInputComponent->BindAxis("Turn", this,
                                    &APawnTank::CalculateRotationInput);
-    PlayerInputComponent->
-        BindAction("Fire", IE_Pressed, this, &APawnTank::ActivateFire);
-    PlayerInputComponent->
-        BindAction("Fire", IE_Released, this, &APawnTank::DeactivateFire);
-    PlayerInputComponent->
-        BindAction("Shield", IE_Pressed, this, &APawnTank::ActivateShield);
-    PlayerInputComponent->
-        BindAction("Shield", IE_Released, this, &APawnTank::DeactivateShield);
-    PlayerInputComponent->
-        BindAction("Boost", IE_Pressed, this, &APawnTank::ActivateSpeedBoost);
-    PlayerInputComponent->
-        BindAction("Boost", IE_Released, this,
-                   &APawnTank::DeactivateSpeedBoost);
+    PlayerInputComponent->BindAction("Fire", IE_Pressed, this,
+                                     &APawnTank::ActivateFire);
+    PlayerInputComponent->BindAction("Fire", IE_Released, this,
+                                     &APawnTank::DeactivateFire);
+    PlayerInputComponent->BindAction("Shield", IE_Pressed, this,
+                                     &APawnTank::ActivateShield);
+    PlayerInputComponent->BindAction("Shield", IE_Released, this,
+                                     &APawnTank::DeactivateShield);
+    PlayerInputComponent->BindAction("Boost", IE_Pressed, this,
+                                     &APawnTank::ActivateSpeedBoost);
+    PlayerInputComponent->BindAction("Boost", IE_Released, this,
+                                     &APawnTank::DeactivateSpeedBoost);
 }
 
 void APawnTank::CalculateMoveInput(const float Value)
@@ -199,8 +198,7 @@ void APawnTank::ManageCurrentShield(float DeltaTime)
     if (bShieldActive)
     {
         if ((CurrentShield = FMath::Clamp(CurrentShield - (DeltaTime * 20.f),
-                                          0.f,
-                                          MaximumShield)) == 0.f)
+                                          0.f, MaximumShield)) == 0.f)
         {
             DeactivateShield();
         }

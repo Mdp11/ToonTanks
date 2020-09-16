@@ -14,6 +14,37 @@ AProjectileBomb::AProjectileBomb() : AProjectileBase()
 void AProjectileBomb::BeginPlay()
 {
     Super::BeginPlay();
+
+}
+void AProjectileBomb::GetPawnsInExplosionRange(
+    TSet<APawnBase*>& OutPawnsInExplosionRange,
+    const FVector ExplosionCenter) const
+{
+    TArray<FHitResult> ComponentsInExplosionRange;
+    GetWorld()->SweepMultiByChannel(ComponentsInExplosionRange, ExplosionCenter,
+                                    ExplosionCenter, FQuat::Identity, ECC_Pawn,
+                                    FCollisionShape::MakeSphere(BombRadius));
+
+    for (const auto& HitComponent : ComponentsInExplosionRange)
+    {
+        const auto ActorHit = Cast<APawnBase>(HitComponent.GetActor());
+        if (ActorHit)
+        {
+            OutPawnsInExplosionRange.Add(ActorHit, nullptr);
+        }
+    }
+}
+
+void AProjectileBomb::PlayExplosionEffects() const
+{
+    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
+                                             GetActorLocation(),
+                                             FRotator::ZeroRotator, {
+                                                 6.5f, 6.5f, 6.5f
+                                             });
+
+    UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation(),
+                                          FRotator::ZeroRotator, 0.2f);
 }
 
 void AProjectileBomb::OnHit(UPrimitiveComponent* HitComponent,
@@ -23,49 +54,22 @@ void AProjectileBomb::OnHit(UPrimitiveComponent* HitComponent,
 {
     AActor* ProjectileOwner = GetOwner();
 
-    if (!ProjectileOwner)
+    if (ProjectileOwner && OtherActor && OtherActor != this)
     {
-        return;
-    }
+        TSet<APawnBase*> HitPawns;
+        GetPawnsInExplosionRange(HitPawns,
+                                 HitComponent->GetComponentLocation());
 
-    if (!OtherActor || OtherActor == this)
-    {
-        return;
-    }
-    TArray<FHitResult> ComponentsInExplosionRange;
-    GetWorld()->SweepMultiByChannel(ComponentsInExplosionRange,
-                                    HitComponent->GetComponentLocation(),
-                                    HitComponent->GetComponentLocation(),
-                                    FQuat::Identity, ECC_Pawn,
-                                    FCollisionShape::MakeSphere(300.f));
-
-    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
-                                             GetActorLocation(),
-                                             FRotator::ZeroRotator, {
-                                                 6.5f, 6.5f, 6.5f
-                                             });
-											 
-	UGameplayStatics::PlaySoundAtLocation(this, HitSound,
-	GetActorLocation(),
-	  FRotator::ZeroRotator, 0.2f);
-
-    TSet<APawnBase*> HitPawns;
-    for (const auto& Component : ComponentsInExplosionRange)
-    {
-        const auto ActorHit = Cast<APawnBase>(Component.GetActor());
-        if (ActorHit)
+        for (const auto& Pawn : HitPawns)
         {
-            HitPawns.Add(ActorHit, nullptr);
+            UGameplayStatics::ApplyDamage(Pawn, Damage,
+                                          ProjectileOwner->
+                                          GetInstigatorController(), this,
+                                          DamageType);
         }
+
+        PlayExplosionEffects();
     }
 
-    for (const auto& Pawn : HitPawns)
-    {
-        UGameplayStatics::ApplyDamage(Pawn, Damage,
-                                      ProjectileOwner->
-                                      GetInstigatorController(),
-                                      this,
-                                      DamageType);
-    }
     Destroy();
 }

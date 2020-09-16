@@ -45,8 +45,8 @@ int32 ATanksGameModeBase::GetTargetTurretsCount() const
 
 void ATanksGameModeBase::HandleGameStart()
 {
-    PlayerControllerRef = Cast<APlayerControllerBase>
-        (UGameplayStatics::GetPlayerController(this, 0));
+    PlayerControllerRef = Cast<APlayerControllerBase>(
+        UGameplayStatics::GetPlayerController(this, 0));
 
     if (PlayerControllerRef)
     {
@@ -67,15 +67,13 @@ void ATanksGameModeBase::HandleGameStart()
     {
         FTimerHandle PlayerEnableHandle;
         const FTimerDelegate PlayerEnableDelegate =
-            FTimerDelegate::CreateUObject(
-                PlayerControllerRef,
-                &APlayerControllerBase::SetPlayerEnabledState,
-                true);
+            FTimerDelegate::CreateUObject(PlayerControllerRef,
+                                          &APlayerControllerBase::SetPlayerEnabledState,
+                                          true);
 
         GetWorld()->GetTimerManager().SetTimer(PlayerEnableHandle,
                                                PlayerEnableDelegate,
-                                               StartDelay + 1,
-                                               false);
+                                               StartDelay + 1, false);
     }
 }
 

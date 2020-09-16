@@ -2,8 +2,6 @@
 
 #include "ProjectileShock.h"
 
-#include <stdbool.h>
-
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -14,8 +12,10 @@ AProjectileShock::AProjectileShock() : AProjectileBase()
     ShockPropagation = CreateDefaultSubobject<UParticleSystemComponent>(
         "Shock propagation effect");
     ShockPropagation->SetAutoActivate(false);
+    
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
         MovementSpeed = 2500.f;
+    
     Damage = 20;
 }
 
@@ -26,15 +26,15 @@ void AProjectileShock::BeginPlay()
 
 APawnBase* AProjectileShock::GetClosestPawn(AActor* ShockPropagatingActor) const
 {
-    TArray<FHitResult> ComponentsInExplosionRange;
+    TArray<FHitResult> ComponentsInShockRange;
 
-    GetWorld()->SweepMultiByChannel(ComponentsInExplosionRange,
+    GetWorld()->SweepMultiByChannel(ComponentsInShockRange,
                                     ShockPropagatingActor->GetActorLocation(),
                                     ShockPropagatingActor->GetActorLocation(),
                                     FQuat::Identity, ECC_Pawn,
                                     FCollisionShape::MakeSphere(ShockRadius));
 
-    ComponentsInExplosionRange.Sort(
+    ComponentsInShockRange.Sort(
         [&ShockPropagatingActor](const auto& Lhs, const auto& Rhs)
         {
             return FVector::Dist(ShockPropagatingActor->GetActorLocation(),
@@ -43,10 +43,10 @@ APawnBase* AProjectileShock::GetClosestPawn(AActor* ShockPropagatingActor) const
                               Rhs.GetActor()->GetActorLocation());
         });
 
-    for (const auto& HitResult : ComponentsInExplosionRange)
+    for (const auto& HitResult : ComponentsInShockRange)
     {
         const auto PawnHit = Cast<APawnBase>(HitResult.GetActor());
-        if (PawnHit && !AlreadyShockedPawns.Contains(PawnHit))
+        if (PawnHit && !AlreadyShockedEnemies.Contains(PawnHit))
         {
             return PawnHit;
         }
@@ -58,7 +58,6 @@ APawnBase* AProjectileShock::GetClosestPawn(AActor* ShockPropagatingActor) const
 void AProjectileShock::PropagateShock(AActor* ShockPropagatingActor)
 {
     ShockPropagation->Deactivate();
-    TArray<FHitResult> ComponentsInExplosionRange;
 
     APawnBase* ClosestPawn = GetClosestPawn(ShockPropagatingActor);
 
@@ -72,6 +71,45 @@ void AProjectileShock::PropagateShock(AActor* ShockPropagatingActor)
     }
 }
 
+void AProjectileShock::PropagateShockEffect(AActor* ShockedEnemy)
+{
+    if (ShockPropagation)
+    {
+        FLatentActionInfo LatentInfo;
+        LatentInfo.CallbackTarget = this;
+
+        ShockPropagation->Activate();
+
+        auto ShockPropagationTargetLocation = ShockedEnemy->GetActorLocation();
+        ShockPropagationTargetLocation.Z = 10.f;
+        UKismetSystemLibrary::MoveComponentTo(ShockPropagation,
+                                              ShockPropagationTargetLocation,
+                                              FRotator::ZeroRotator, false,
+                                              false, 0.1f, false,
+                                              EMoveComponentAction::Move,
+                                              LatentInfo);
+    }
+}
+
+void AProjectileShock::DematerializeProjectile()
+{
+    ProjectileMesh->SetHiddenInGame(true);
+    ProjectileTrailEffect->SetHiddenInGame(true);
+    SetActorEnableCollision(false);
+}
+
+void AProjectileShock::PlayShockEffects(FVector& SparkLocation) const
+{
+    UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation(),
+                                          FRotator::ZeroRotator, 0.2f);
+
+    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
+                                             SparkLocation,
+                                             FRotator::ZeroRotator, {
+                                                 1.f, 1.f, 1.f
+                                             });
+}
+
 void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
                              AActor* OtherActor,
                              UPrimitiveComponent* OtherComponent,
@@ -79,69 +117,35 @@ void AProjectileShock::OnHit(UPrimitiveComponent* HitComponent,
 {
     AActor* ProjectileOwner = GetOwner();
 
-    if (!ProjectileOwner)
+    if (ProjectileOwner && OtherActor && OtherActor != this)
     {
-        return;
-    }
+        FVector SparkLocation;
 
-    if (!OtherActor || OtherActor == this)
-    {
-        return;
-    }
-
-    FVector SparkLocation;
-
-    UGameplayStatics::PlaySoundAtLocation(this, HitSound,
-                                          GetActorLocation(),
-                                          FRotator::ZeroRotator, 0.2f);
-
-    APawnBase* OtherPawn = Cast<APawnBase>(OtherActor);
-    if (OtherPawn)
-    {
-        SparkLocation = OtherActor->GetActorLocation();
-        AlreadyShockedPawns.Add(OtherPawn);
-        UGameplayStatics::ApplyDamage(OtherActor, Damage,
-                                      ProjectileOwner->
-                                      GetInstigatorController(),
-                                      this,
-                                      DamageType);
-
-        const FTimerDelegate ShockDelegate = FTimerDelegate::CreateUObject(this,
-            &AProjectileShock::PropagateShock,
-            OtherActor);
-
-        GetWorld()->GetTimerManager().SetTimer(ShockHandle,
-                                               ShockDelegate,
-                                               PropagationRate, false);
-
-        ProjectileMesh->SetHiddenInGame(true);
-        ProjectileTrailEffect->SetHiddenInGame(true);
-        SetActorEnableCollision(false);
-
-        FLatentActionInfo LatentInfo;
-        LatentInfo.CallbackTarget = this;
-
-        if (ShockPropagation)
+        if (Cast<APawnBase>(OtherActor))
         {
-            ShockPropagation->Activate();
-            auto ShockPropagationTargetLocation = OtherPawn->GetActorLocation();
-            ShockPropagationTargetLocation.Z = 10.f;
-            UKismetSystemLibrary::MoveComponentTo(ShockPropagation,
-                                                  ShockPropagationTargetLocation,
-                                                  FRotator::ZeroRotator, false,
-                                                  false, 0.1f, false,
-                                                  EMoveComponentAction::Move,
-                                                  LatentInfo);
-        }
-    }
-    else
-    {
-        SparkLocation = GetActorLocation();
-        Destroy();
-    }
+            SparkLocation = OtherActor->GetActorLocation();
+            UGameplayStatics::ApplyDamage(OtherActor, Damage,
+                                          ProjectileOwner->
+                                          GetInstigatorController(), this,
+                                          DamageType);
 
-    UGameplayStatics::SpawnEmitterAtLocation(this, ProjectileHitEffect,
-                                             SparkLocation,
-                                             FRotator::ZeroRotator,
-                                             {1.f, 1.f, 1.f});
+            AlreadyShockedEnemies.Add(OtherActor);
+
+            const FTimerDelegate ShockDelegate = FTimerDelegate::CreateUObject(
+                this, &AProjectileShock::PropagateShock, OtherActor);
+
+            GetWorld()->GetTimerManager().SetTimer(ShockHandle, ShockDelegate,
+                                                   PropagationRate, false);
+
+            DematerializeProjectile();
+            PropagateShockEffect(OtherActor);
+        }
+        else
+        {
+            SparkLocation = GetActorLocation();
+            Destroy();
+        }
+
+        PlayShockEffects(SparkLocation);
+    }
 }
