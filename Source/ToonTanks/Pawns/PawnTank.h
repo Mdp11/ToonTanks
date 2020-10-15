@@ -55,6 +55,10 @@ private:
     UPROPERTY(EditAnywhere, Category="Sounds")
     USoundBase* WeaponSwitchSound{nullptr};
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects", meta=(
+    AllowPrivateAccess="true"))
+    UAudioComponent* NoAmmoSound{nullptr};
+
     UPROPERTY()
     APlayerController* PlayerControllerRef{nullptr};
 

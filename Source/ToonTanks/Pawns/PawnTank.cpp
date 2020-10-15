@@ -31,13 +31,17 @@ APawnTank::APawnTank()
     ShieldActiveSound->SetAutoActivate(false);
 
     RightBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>(
-        TEXT("Right boost Effect"));
+        TEXT("Right boost effect"));
     RightBoostEffect->SetupAttachment(BaseMesh);
     LeftBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>(
         TEXT("Left boost effect"));
     LeftBoostEffect->SetupAttachment(BaseMesh);
     BoostSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Boost sound"));
     BoostSound->SetAutoActivate(false);
+
+    NoAmmoSound = CreateDefaultSubobject<UAudioComponent>(
+    TEXT("No ammo sound"));
+    NoAmmoSound->SetAutoActivate(false);
 
     FireRate = 0.5f;
 }
@@ -306,13 +310,22 @@ void APawnTank::ManageCurrentSpeedBoost(float DeltaTime)
 
 void APawnTank::PreFire()
 {
-    if (bReadyToFire && !bShieldActive && !bBoostActive && WeaponsBulletsCount[
-        CurrentWeaponSlot] > 0)
+    if (bReadyToFire && !bShieldActive && !bBoostActive)
     {
-        WeaponsBulletsCount[CurrentWeaponSlot]--;
-        Super::PreFire();
-        GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
-            FireShake, 0.2f);
+        if (WeaponsBulletsCount[CurrentWeaponSlot] > 0)
+        {
+            WeaponsBulletsCount[CurrentWeaponSlot]--;
+            Super::PreFire();
+            GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
+                FireShake, 0.2f);
+        }
+        else
+        {
+            if(NoAmmoSound && !NoAmmoSound->IsPlaying())
+            {
+                NoAmmoSound->Play();
+            }
+        }
     }
 }
 
