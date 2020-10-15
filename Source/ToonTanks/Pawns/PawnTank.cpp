@@ -306,8 +306,10 @@ void APawnTank::ManageCurrentSpeedBoost(float DeltaTime)
 
 void APawnTank::PreFire()
 {
-    if (bReadyToFire && !bShieldActive && !bBoostActive)
+    if (bReadyToFire && !bShieldActive && !bBoostActive && WeaponsBulletsCount[
+        CurrentWeaponSlot] > 0)
     {
+        WeaponsBulletsCount[CurrentWeaponSlot]--;
         Super::PreFire();
         GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
             FireShake, 0.2f);
@@ -321,7 +323,7 @@ void APawnTank::SwitchWeaponSlot(const uint8_t Slot)
         CurrentWeaponSlot = Slot;
         ProjectileClass = Weapons[Slot];
         UGameplayStatics::PlaySoundAtLocation(this, WeaponSwitchSound,
-                                          GetActorLocation());
+                                              GetActorLocation());
     }
 }
 

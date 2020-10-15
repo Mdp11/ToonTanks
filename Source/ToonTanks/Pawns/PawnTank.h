@@ -117,6 +117,8 @@ private:
 
     UPROPERTY(EditAnywhere)
     TArray<TSubclassOf<AProjectileBase>> Weapons;
+    TArray<int> WeaponsBulletsCount{100000, 5, 3 ,1};
+
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
