@@ -52,6 +52,9 @@ private:
         AllowPrivateAccess="true"))
     UAudioComponent* ShieldActiveSound{nullptr};
 
+    UPROPERTY(EditAnywhere, Category="Sounds")
+    USoundBase* WeaponSwitchSound{nullptr};
+
     UPROPERTY()
     APlayerController* PlayerControllerRef{nullptr};
 

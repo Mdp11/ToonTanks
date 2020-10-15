@@ -314,12 +314,14 @@ void APawnTank::PreFire()
     }
 }
 
-void APawnTank::SwitchWeaponSlot(uint8_t Slot)
+void APawnTank::SwitchWeaponSlot(const uint8_t Slot)
 {
     if (Slot != CurrentWeaponSlot)
     {
         CurrentWeaponSlot = Slot;
         ProjectileClass = Weapons[Slot];
+        UGameplayStatics::PlaySoundAtLocation(this, WeaponSwitchSound,
+                                          GetActorLocation());
     }
 }
 
