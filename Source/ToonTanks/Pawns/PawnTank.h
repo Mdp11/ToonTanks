@@ -108,6 +108,13 @@ private:
 
     bool bBoostActive{false};
 
+    DECLARE_DELEGATE_OneParam(FWeaponSlotInputDelegate, uint8_t);
+
+    uint8_t CurrentWeaponSlot{0};
+
+    UPROPERTY(EditAnywhere)
+    TArray<TSubclassOf<AProjectileBase>> Weapons;
+
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
 
@@ -140,6 +147,8 @@ private:
     {
         FireRate = DefaultFireRate;
     }
+
+    void SwitchWeaponSlot(uint8_t Slot);
 
     void PlayMovingSound() const;
     void StopMovingSound() const;

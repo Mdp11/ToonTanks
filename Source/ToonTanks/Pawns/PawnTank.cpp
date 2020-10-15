@@ -104,6 +104,19 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
                                      &APawnTank::ActivateSpeedBoost);
     PlayerInputComponent->BindAction("Boost", IE_Released, this,
                                      &APawnTank::DeactivateSpeedBoost);
+
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank,
+                                     uint8_t>("Weapon Slot 1", IE_Pressed, this,
+                                              &APawnTank::SwitchWeaponSlot, 0);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank,
+                                     uint8_t>("Weapon Slot 2", IE_Pressed, this,
+                                              &APawnTank::SwitchWeaponSlot, 1);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank,
+                                     uint8_t>("Weapon Slot 3", IE_Pressed, this,
+                                              &APawnTank::SwitchWeaponSlot, 2);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank,
+                                     uint8_t>("Weapon Slot 4", IE_Pressed, this,
+                                              &APawnTank::SwitchWeaponSlot, 3);
 }
 
 void APawnTank::CalculateMoveInput(const float Value)
@@ -298,6 +311,15 @@ void APawnTank::PreFire()
         Super::PreFire();
         GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
             FireShake, 0.2f);
+    }
+}
+
+void APawnTank::SwitchWeaponSlot(uint8_t Slot)
+{
+    if (Slot != CurrentWeaponSlot)
+    {
+        CurrentWeaponSlot = Slot;
+        ProjectileClass = Weapons[Slot];
     }
 }
 
