@@ -39,8 +39,8 @@ APawnTank::APawnTank()
     BoostSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Boost sound"));
     BoostSound->SetAutoActivate(false);
 
-    NoAmmoSound = CreateDefaultSubobject<UAudioComponent>(
-    TEXT("No ammo sound"));
+    NoAmmoSound = CreateDefaultSubobject<UAudioComponent
+    >(TEXT("No ammo sound"));
     NoAmmoSound->SetAutoActivate(false);
 
     FireRate = 0.5f;
@@ -109,18 +109,14 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     PlayerInputComponent->BindAction("Boost", IE_Released, this,
                                      &APawnTank::DeactivateSpeedBoost);
 
-    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank,
-                                     uint8_t>("Weapon Slot 1", IE_Pressed, this,
-                                              &APawnTank::SwitchWeaponSlot, 0);
-    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank,
-                                     uint8_t>("Weapon Slot 2", IE_Pressed, this,
-                                              &APawnTank::SwitchWeaponSlot, 1);
-    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank,
-                                     uint8_t>("Weapon Slot 3", IE_Pressed, this,
-                                              &APawnTank::SwitchWeaponSlot, 2);
-    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank,
-                                     uint8_t>("Weapon Slot 4", IE_Pressed, this,
-                                              &APawnTank::SwitchWeaponSlot, 3);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank, int>(
+        "Weapon Slot 1", IE_Pressed, this, &APawnTank::SwitchWeaponSlot, 0);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank, int>(
+        "Weapon Slot 2", IE_Pressed, this, &APawnTank::SwitchWeaponSlot, 1);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank, int>(
+        "Weapon Slot 3", IE_Pressed, this, &APawnTank::SwitchWeaponSlot, 2);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank, int>(
+        "Weapon Slot 4", IE_Pressed, this, &APawnTank::SwitchWeaponSlot, 3);
 }
 
 void APawnTank::CalculateMoveInput(const float Value)
@@ -314,14 +310,17 @@ void APawnTank::PreFire()
     {
         if (WeaponsBulletsCount[CurrentWeaponSlot] > 0)
         {
-            WeaponsBulletsCount[CurrentWeaponSlot]--;
+            if (CurrentWeaponSlot != 0)
+            {
+                WeaponsBulletsCount[CurrentWeaponSlot]--;
+            }
             Super::PreFire();
             GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
                 FireShake, 0.2f);
         }
         else
         {
-            if(NoAmmoSound && !NoAmmoSound->IsPlaying())
+            if (NoAmmoSound && !NoAmmoSound->IsPlaying())
             {
                 NoAmmoSound->Play();
             }
@@ -329,7 +328,7 @@ void APawnTank::PreFire()
     }
 }
 
-void APawnTank::SwitchWeaponSlot(const uint8_t Slot)
+void APawnTank::SwitchWeaponSlot(const int Slot)
 {
     if (Slot != CurrentWeaponSlot)
     {
