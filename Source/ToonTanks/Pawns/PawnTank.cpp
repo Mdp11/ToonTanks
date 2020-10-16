@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/AudioComponent.h"
+#include "ToonTanks/Actors/ProjectileShock.h"
 #include "ToonTanks/Components/HealthComponent.h"
 
 APawnTank::APawnTank()
@@ -389,14 +390,9 @@ void APawnTank::BoostFireRate(const float FireRateMultiplier,
                                            Duration);
 }
 
-void APawnTank::BoostProjectile(
-    const TSubclassOf<AProjectileBase> NewProjectileClass, const float Duration)
+void APawnTank::AddAmmo(const int WeaponType, const int AmmoAmount)
 {
-    ProjectileClass = NewProjectileClass;
-
-    GetWorld()->GetTimerManager().SetTimer(BoostedProjectileHandle, this,
-                                           &APawnTank::RestoreDefaultProjectileClass,
-                                           Duration);
+    WeaponsBulletsCount[WeaponType] += AmmoAmount;
 }
 
 void APawnTank::HandleDestruction()

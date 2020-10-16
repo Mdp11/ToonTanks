@@ -146,11 +146,6 @@ private:
     void DeactivateSpeedBoost();
     void ManageCurrentSpeedBoost(float DeltaTime);
 
-    void RestoreDefaultProjectileClass()
-    {
-        ProjectileClass = DefaultProjectileClass;
-    }
-
     void RestoreFireRate()
     {
         FireRate = DefaultFireRate;
@@ -202,8 +197,7 @@ public:
 
     void BoostFireRate(float FireRateMultiplier, float Duration);
 
-    void BoostProjectile(TSubclassOf<AProjectileBase> NewProjectileClass,
-                         float Duration);
+    void AddAmmo(const int WeaponType, const int AmmoAmount);
 
 protected:
 
