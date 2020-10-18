@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/AudioComponent.h"
+#include "ToonTanks/Actors/ProjectileShock.h"
 #include "ToonTanks/Components/HealthComponent.h"
 
 APawnTank::APawnTank()
@@ -31,13 +32,17 @@ APawnTank::APawnTank()
     ShieldActiveSound->SetAutoActivate(false);
 
     RightBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>(
-        TEXT("Right boost Effect"));
+        TEXT("Right boost effect"));
     RightBoostEffect->SetupAttachment(BaseMesh);
     LeftBoostEffect = CreateDefaultSubobject<UParticleSystemComponent>(
         TEXT("Left boost effect"));
     LeftBoostEffect->SetupAttachment(BaseMesh);
     BoostSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Boost sound"));
     BoostSound->SetAutoActivate(false);
+
+    NoAmmoSound = CreateDefaultSubobject<UAudioComponent
+    >(TEXT("No ammo sound"));
+    NoAmmoSound->SetAutoActivate(false);
 
     FireRate = 0.5f;
 }
@@ -104,6 +109,15 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
                                      &APawnTank::ActivateSpeedBoost);
     PlayerInputComponent->BindAction("Boost", IE_Released, this,
                                      &APawnTank::DeactivateSpeedBoost);
+
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank, int>(
+        "Weapon Slot 1", IE_Pressed, this, &APawnTank::SwitchWeaponSlot, 0);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank, int>(
+        "Weapon Slot 2", IE_Pressed, this, &APawnTank::SwitchWeaponSlot, 1);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank, int>(
+        "Weapon Slot 3", IE_Pressed, this, &APawnTank::SwitchWeaponSlot, 2);
+    PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank, int>(
+        "Weapon Slot 4", IE_Pressed, this, &APawnTank::SwitchWeaponSlot, 3);
 }
 
 void APawnTank::CalculateMoveInput(const float Value)
@@ -295,9 +309,34 @@ void APawnTank::PreFire()
 {
     if (bReadyToFire && !bShieldActive && !bBoostActive)
     {
-        Super::PreFire();
-        GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
-            FireShake, 0.2f);
+        if (WeaponsBulletsCount[CurrentWeaponSlot] > 0)
+        {
+            if (CurrentWeaponSlot != 0)
+            {
+                WeaponsBulletsCount[CurrentWeaponSlot]--;
+            }
+            Super::PreFire();
+            GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
+                FireShake, 0.2f);
+        }
+        else
+        {
+            if (NoAmmoSound && !NoAmmoSound->IsPlaying())
+            {
+                NoAmmoSound->Play();
+            }
+        }
+    }
+}
+
+void APawnTank::SwitchWeaponSlot(const int Slot)
+{
+    if (Slot != CurrentWeaponSlot)
+    {
+        CurrentWeaponSlot = Slot;
+        ProjectileClass = Weapons[Slot];
+        UGameplayStatics::PlaySoundAtLocation(this, WeaponSwitchSound,
+                                              GetActorLocation());
     }
 }
 
@@ -351,14 +390,9 @@ void APawnTank::BoostFireRate(const float FireRateMultiplier,
                                            Duration);
 }
 
-void APawnTank::BoostProjectile(
-    const TSubclassOf<AProjectileBase> NewProjectileClass, const float Duration)
+void APawnTank::AddAmmo(const int WeaponType, const int AmmoAmount)
 {
-    ProjectileClass = NewProjectileClass;
-
-    GetWorld()->GetTimerManager().SetTimer(BoostedProjectileHandle, this,
-                                           &APawnTank::RestoreDefaultProjectileClass,
-                                           Duration);
+    WeaponsBulletsCount[WeaponType] += AmmoAmount;
 }
 
 void APawnTank::HandleDestruction()

@@ -52,6 +52,13 @@ private:
         AllowPrivateAccess="true"))
     UAudioComponent* ShieldActiveSound{nullptr};
 
+    UPROPERTY(EditAnywhere, Category="Sounds")
+    USoundBase* WeaponSwitchSound{nullptr};
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects", meta=(
+        AllowPrivateAccess="true"))
+    UAudioComponent* NoAmmoSound{nullptr};
+
     UPROPERTY()
     APlayerController* PlayerControllerRef{nullptr};
 
@@ -108,6 +115,14 @@ private:
 
     bool bBoostActive{false};
 
+    DECLARE_DELEGATE_OneParam(FWeaponSlotInputDelegate, int);
+
+    int CurrentWeaponSlot{0};
+
+    UPROPERTY(EditAnywhere)
+    TArray<TSubclassOf<AProjectileBase>> Weapons;
+    TArray<int> WeaponsBulletsCount{1, 5, 3, 1};
+
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
 
@@ -131,15 +146,12 @@ private:
     void DeactivateSpeedBoost();
     void ManageCurrentSpeedBoost(float DeltaTime);
 
-    void RestoreDefaultProjectileClass()
-    {
-        ProjectileClass = DefaultProjectileClass;
-    }
-
     void RestoreFireRate()
     {
         FireRate = DefaultFireRate;
     }
+
+    void SwitchWeaponSlot(int Slot);
 
     void PlayMovingSound() const;
     void StopMovingSound() const;
@@ -172,12 +184,20 @@ public:
     UFUNCTION(BlueprintCallable)
     float GetMaximumSpeedBoost() const { return MaximumBoost; }
 
+    UFUNCTION(BlueprintCallable)
+    int GetCurrentWeapon() const { return CurrentWeaponSlot; }
+
+    UFUNCTION(BlueprintCallable)
+    int GetAmmoForCurrentWeapon() const
+    {
+        return WeaponsBulletsCount[CurrentWeaponSlot];
+    }
+
     void Heal(float HealValue) const;
 
     void BoostFireRate(float FireRateMultiplier, float Duration);
 
-    void BoostProjectile(TSubclassOf<AProjectileBase> NewProjectileClass,
-                         float Duration);
+    void AddAmmo(const int WeaponType, const int AmmoAmount);
 
 protected:
 
