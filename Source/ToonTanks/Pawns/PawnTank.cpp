@@ -6,7 +6,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/AudioComponent.h"
-#include "ToonTanks/Actors/ProjectileShock.h"
 #include "ToonTanks/Components/HealthComponent.h"
 
 APawnTank::APawnTank()
@@ -23,6 +22,11 @@ APawnTank::APawnTank()
 
     MovingSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Moving sound"));
     MovingSound->SetAutoActivate(false);
+
+    HealEffect = CreateDefaultSubobject<UParticleSystemComponent>(
+    TEXT("Heal effect"));
+    HealEffect->SetupAttachment(RootComponent);
+    HealEffect->SetAutoActivate(false);
 
     ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>(
         TEXT("Shield effect"));
@@ -369,6 +373,10 @@ void APawnTank::Heal(const float HealValue) const
     if (HealthComponent)
     {
         HealthComponent->Heal(HealValue);
+        if(HealEffect)
+        {
+            HealEffect->Activate();
+        }
     }
 }
 

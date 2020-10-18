@@ -25,6 +25,10 @@ private:
     UCameraComponent* CameraComponent{nullptr};
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
+    AllowPrivateAccess="true"))
+    UParticleSystemComponent* HealEffect{nullptr};
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
         AllowPrivateAccess="true"))
     UParticleSystemComponent* ShieldEffect{nullptr};
 
@@ -121,7 +125,7 @@ private:
 
     UPROPERTY(EditAnywhere)
     TArray<TSubclassOf<AProjectileBase>> Weapons;
-    TArray<int> WeaponsBulletsCount{1, 5, 3, 1};
+    TArray<int> WeaponsBulletsCount{1, 0, 0, 0};
 
     void CalculateMoveInput(float Value);
     void CalculateRotationInput(float Value);
