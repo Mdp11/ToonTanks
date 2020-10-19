@@ -55,12 +55,6 @@ void APawnTank::BeginPlay()
 {
     Super::BeginPlay();
     
-    const auto StartRotation = GetActorRotation();
-    BaseMesh->SetRelativeRotation(StartRotation);
-    auto CameraInitialRotation = SpringArmComponent->GetComponentRotation();
-    CameraInitialRotation.Yaw = StartRotation.Yaw;
-    SpringArmComponent->SetRelativeRotation(CameraInitialRotation);
-    
     PlayerControllerRef = Cast<APlayerController>(GetController());
 
     DefaultProjectileClass = ProjectileClass;
@@ -134,7 +128,7 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void APawnTank::CalculateMoveInput(const float Value)
 {
     MoveDirection = {
-        -Value * CurrentMovementSpeed * GetWorld()->DeltaTimeSeconds, 0.f, 0.f
+        Value * CurrentMovementSpeed * GetWorld()->DeltaTimeSeconds, 0.f, 0.f
     };
 }
 
