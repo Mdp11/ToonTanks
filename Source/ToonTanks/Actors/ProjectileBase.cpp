@@ -19,8 +19,8 @@ AProjectileBase::AProjectileBase()
     ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(
         TEXT("Projectile Movement"));
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
-        MovementSpeed;
-
+                MovementSpeed;
+    
     ProjectileTrailEffect = CreateDefaultSubobject<UParticleSystemComponent>(
         TEXT("Trail effect"));
     ProjectileTrailEffect->SetupAttachment(RootComponent);
@@ -30,8 +30,9 @@ AProjectileBase::AProjectileBase()
 
 void AProjectileBase::BeginPlay()
 {
+    
     Super::BeginPlay();
-
+    
     UGameplayStatics::PlaySoundAtLocation(this, LaunchSound,
                                           GetActorLocation());
 }
