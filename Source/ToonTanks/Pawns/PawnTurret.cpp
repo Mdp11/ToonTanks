@@ -9,6 +9,10 @@ void APawnTurret::BeginPlay()
     Super::BeginPlay();
 
     PlayerPawn = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
+
+    GetWorld()->GetTimerManager().SetTimer(InitiateFireHandle, this,
+                                           &APawnTurret::CheckFireConditions,
+                                           FireRate, true);
 }
 
 void APawnTurret::Tick(float DeltaTime)
@@ -33,7 +37,7 @@ bool APawnTurret::IsPlayerDirectlyInSight() const
 
 void APawnTurret::HandleFire()
 {
-    const bool IsLoadingFire = GetWorld()->GetTimerManager().IsTimerActive(
+    const bool FirePaused = GetWorld()->GetTimerManager().IsTimerPaused(
         InitiateFireHandle);
 
     if (PlayerPawn && GetDistanceFromPlayer() <= FireRange)
@@ -41,24 +45,13 @@ void APawnTurret::HandleFire()
         RotateTurret(PlayerPawn->GetActorLocation());
         if (IsPlayerDirectlyInSight())
         {
-            if (!IsLoadingFire)
+            if (FirePaused)
             {
-                if (GetWorld()->GetTimerManager().IsTimerPaused(
-                    InitiateFireHandle))
-                {
-                    GetWorld()->GetTimerManager().UnPauseTimer(
-                        InitiateFireHandle);
-                }
-                else
-                {
-                    GetWorld()->GetTimerManager().SetTimer(
-                        InitiateFireHandle, this,
-                        &APawnTurret::CheckFireConditions, FireRate);
-                }
+                GetWorld()->GetTimerManager().UnPauseTimer(InitiateFireHandle);
             }
         }
     }
-    else if (IsLoadingFire)
+    else if (!FirePaused)
     {
         GetWorld()->GetTimerManager().PauseTimer(InitiateFireHandle);
     }
