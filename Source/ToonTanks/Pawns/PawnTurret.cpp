@@ -36,20 +36,25 @@ void APawnTurret::HandleFire()
     const bool IsLoadingFire = GetWorld()->GetTimerManager().IsTimerActive(
         InitiateFireHandle);
 
-    if (PlayerPawn && GetDistanceFromPlayer() <= FireRange &&
-        IsPlayerDirectlyInSight())
+    if (PlayerPawn && GetDistanceFromPlayer() <= FireRange)
     {
         RotateTurret(PlayerPawn->GetActorLocation());
-        if (!IsLoadingFire)
+        if (IsPlayerDirectlyInSight())
         {
-            if(GetWorld()->GetTimerManager().IsTimerPaused(InitiateFireHandle))
+            if (!IsLoadingFire)
             {
-                GetWorld()->GetTimerManager().UnPauseTimer(InitiateFireHandle);
-            }
-            else
-            {
-                GetWorld()->GetTimerManager().SetTimer(InitiateFireHandle, this,
-                    &APawnTurret::CheckFireConditions, FireRate);
+                if (GetWorld()->GetTimerManager().IsTimerPaused(
+                    InitiateFireHandle))
+                {
+                    GetWorld()->GetTimerManager().UnPauseTimer(
+                        InitiateFireHandle);
+                }
+                else
+                {
+                    GetWorld()->GetTimerManager().SetTimer(
+                        InitiateFireHandle, this,
+                        &APawnTurret::CheckFireConditions, FireRate);
+                }
             }
         }
     }
