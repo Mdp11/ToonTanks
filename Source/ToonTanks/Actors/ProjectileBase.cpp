@@ -19,8 +19,8 @@ AProjectileBase::AProjectileBase()
     ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(
         TEXT("Projectile Movement"));
     ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
-                MovementSpeed;
-    
+        MovementSpeed;
+
     ProjectileTrailEffect = CreateDefaultSubobject<UParticleSystemComponent>(
         TEXT("Trail effect"));
     ProjectileTrailEffect->SetupAttachment(RootComponent);
@@ -30,9 +30,8 @@ AProjectileBase::AProjectileBase()
 
 void AProjectileBase::BeginPlay()
 {
-    
     Super::BeginPlay();
-    
+
     UGameplayStatics::PlaySoundAtLocation(this, LaunchSound,
                                           GetActorLocation());
 }
@@ -59,12 +58,11 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
     if (ProjectileOwner && OtherActor && OtherActor != this)
     {
         FVector HitParticleScale{0.2f, 0.2f, 0.2f};
-        APawnTank* PlayerTank = Cast<APawnTank>(OtherActor);
         USoundBase* SoundToPlay = HitSound;
 
-        if (Cast<APawnBase>(OtherActor))
+        if (APawnTank* PlayerTank = Cast<APawnTank>(OtherActor))
         {
-            if (PlayerTank && PlayerTank->IsShieldActive())
+            if (PlayerTank->IsShieldActive())
             {
                 SoundToPlay = ShieldHitSound;
             }
