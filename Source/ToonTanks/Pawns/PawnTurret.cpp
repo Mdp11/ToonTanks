@@ -17,24 +17,45 @@ void APawnTurret::Tick(float DeltaTime)
     HandleFire();
 }
 
+bool APawnTurret::IsPlayerDirectlyInSight() const
+{
+    FHitResult ObjectInSightHitResult;
+    GetWorld()->LineTraceSingleByChannel(ObjectInSightHitResult,
+                                         ProjectileSpawnPoint->
+                                         GetComponentLocation(),
+                                         PlayerPawn->GetActorLocation(),
+                                         ECC_Visibility);
+
+    const auto ActorInSight = ObjectInSightHitResult.GetActor();
+
+    return ActorInSight && Cast<APawnTank>(ActorInSight);
+}
+
 void APawnTurret::HandleFire()
 {
     const bool IsLoadingFire = GetWorld()->GetTimerManager().IsTimerActive(
         InitiateFireHandle);
 
-    if (PlayerPawn && GetDistanceFromPlayer() <= FireRange)
+    if (PlayerPawn && GetDistanceFromPlayer() <= FireRange &&
+        IsPlayerDirectlyInSight())
     {
         RotateTurret(PlayerPawn->GetActorLocation());
         if (!IsLoadingFire)
         {
-            GetWorld()->GetTimerManager().SetTimer(InitiateFireHandle, this,
-                                                   &APawnTurret::CheckFireConditions,
-                                                   FireRate);
+            if(GetWorld()->GetTimerManager().IsTimerPaused(InitiateFireHandle))
+            {
+                GetWorld()->GetTimerManager().UnPauseTimer(InitiateFireHandle);
+            }
+            else
+            {
+                GetWorld()->GetTimerManager().SetTimer(InitiateFireHandle, this,
+                    &APawnTurret::CheckFireConditions, FireRate);
+            }
         }
     }
     else if (IsLoadingFire)
     {
-        GetWorld()->GetTimerManager().ClearTimer(InitiateFireHandle);
+        GetWorld()->GetTimerManager().PauseTimer(InitiateFireHandle);
     }
 }
 
