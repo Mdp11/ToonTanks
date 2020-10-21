@@ -60,13 +60,9 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
         FVector HitParticleScale{0.2f, 0.2f, 0.2f};
         USoundBase* SoundToPlay = HitSound;
 
-        if (APawnTank* PlayerTank = Cast<APawnTank>(OtherActor))
+        if (Cast<APawnBase>(OtherActor))
         {
-            if (PlayerTank->IsShieldActive())
-            {
-                SoundToPlay = ShieldHitSound;
-            }
-            else
+            if (Cast<APawnTank>(ProjectileOwner))
             {
                 HitParticleScale = {1.f, 1.f, 1.f};
                 UGameplayStatics::ApplyDamage(OtherActor, Damage,
@@ -74,8 +70,22 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComponent,
                                               GetInstigatorController(), this,
                                               DamageType);
             }
+            else if (APawnTank* PlayerTank = Cast<APawnTank>(OtherActor))
+            {
+                if (PlayerTank->IsShieldActive())
+                {
+                    SoundToPlay = ShieldHitSound;
+                }
+                else
+                {
+                    HitParticleScale = {1.f, 1.f, 1.f};
+                    UGameplayStatics::ApplyDamage(OtherActor, Damage,
+                                                  ProjectileOwner->
+                                                  GetInstigatorController(),
+                                                  this, DamageType);
+                }
+            }
         }
-
         PlayHitEffects(HitParticleScale, SoundToPlay);
     }
 
