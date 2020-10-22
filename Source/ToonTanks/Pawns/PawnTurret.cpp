@@ -32,29 +32,24 @@ bool APawnTurret::IsPlayerDirectlyInSight() const
 
     const auto ActorInSight = ObjectInSightHitResult.GetActor();
 
+    UE_LOG(LogTemp, Warning, TEXT("%s"), *ActorInSight->GetName());
+
     return ActorInSight && Cast<APawnTank>(ActorInSight);
 }
 
 void APawnTurret::HandleFire()
 {
-    const bool FirePaused = GetWorld()->GetTimerManager().IsTimerPaused(
-        InitiateFireHandle);
-
     if (PlayerPawn && GetDistanceFromPlayer() <= FireRange)
     {
         RotateTurret(PlayerPawn->GetActorLocation());
         if (IsPlayerDirectlyInSight())
         {
-            if (FirePaused)
-            {
-                GetWorld()->GetTimerManager().UnPauseTimer(InitiateFireHandle);
-            }
+            GetWorld()->GetTimerManager().UnPauseTimer(InitiateFireHandle);
+            return;
         }
     }
-    else if (!FirePaused)
-    {
-        GetWorld()->GetTimerManager().PauseTimer(InitiateFireHandle);
-    }
+
+    GetWorld()->GetTimerManager().PauseTimer(InitiateFireHandle);
 }
 
 void APawnTurret::CheckFireConditions()
