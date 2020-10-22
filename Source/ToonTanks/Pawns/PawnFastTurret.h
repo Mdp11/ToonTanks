@@ -20,6 +20,9 @@ private:
         AllowPrivateAccess="true"))
     int ProjectileBurstLimit{5};
 
+    UPROPERTY(EditAnywhere, Category="Sounds")
+    USoundBase* ChargingInterruptSound{nullptr};
+
     int ProjectileCount{0};
 
     float BurstDelay{0.f};

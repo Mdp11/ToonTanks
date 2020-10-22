@@ -32,8 +32,6 @@ bool APawnTurret::IsPlayerDirectlyInSight() const
 
     const auto ActorInSight = ObjectInSightHitResult.GetActor();
 
-    UE_LOG(LogTemp, Warning, TEXT("%s"), *ActorInSight->GetName());
-
     return ActorInSight && Cast<APawnTank>(ActorInSight);
 }
 

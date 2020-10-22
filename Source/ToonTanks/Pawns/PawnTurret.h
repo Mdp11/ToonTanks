@@ -15,7 +15,6 @@ class TOONTANKS_API APawnTurret : public APawnBase
 
 private:
     void CheckFireConditions();
-    bool IsPlayerDirectlyInSight() const;
 
 public:
     APawnTurret()
@@ -27,6 +26,7 @@ public:
     virtual void HandleDestruction() override;
 
 protected:
+    bool IsPlayerDirectlyInSight() const;
 
     virtual void BeginPlay() override;
 
