@@ -23,20 +23,35 @@ void APawnFastTurret::BeginPlay()
 
 void APawnFastTurret::InterruptFire()
 {
-    ProjectileCount = 0;
-    bReadyToBurst = true;
-    bBursting = false;
+    if (!bBursting)
+    {
+        bReadyToBurst = true;
+    }
 
     if (GetWorld()->GetTimerManager().IsTimerActive(PreFireHandle))
     {
         GetWorld()->GetTimerManager().ClearTimer(PreFireHandle);
+    }
+
+    if (FireChargeSound && FireChargeSound->IsPlaying())
+    {
+        const auto TimePlayed = GetWorld()->AudioTimeSeconds - FireChargeSound->
+            TimeAudioComponentPlayed;
+        FireChargeSound->Stop();
+        
+        if (!bBursting && TimePlayed > 0.2)
+        {
+            UGameplayStatics::PlaySoundAtLocation(
+                this, ChargingInterruptSound, GetActorLocation(), 0.4f);
+        }
     }
 }
 
 void APawnFastTurret::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    if (PlayerPawn && GetDistanceFromPlayer() > FireRange)
+    if (PlayerPawn && (GetDistanceFromPlayer() > FireRange || !
+        IsPlayerDirectlyInSight()))
     {
         InterruptFire();
     }
