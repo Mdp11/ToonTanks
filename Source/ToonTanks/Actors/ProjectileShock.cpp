@@ -12,11 +12,6 @@ AProjectileShock::AProjectileShock() : AProjectileBase()
     ShockPropagation = CreateDefaultSubobject<UParticleSystemComponent>(
         "Shock propagation effect");
     ShockPropagation->SetAutoActivate(false);
-    
-    ProjectileMovement->InitialSpeed = ProjectileMovement->MaxSpeed =
-        MovementSpeed = 2500.f;
-    
-    Damage = 20;
 }
 
 void AProjectileShock::BeginPlay()

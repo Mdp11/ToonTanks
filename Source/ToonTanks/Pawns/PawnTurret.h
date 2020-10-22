@@ -15,6 +15,7 @@ class TOONTANKS_API APawnTurret : public APawnBase
 
 private:
     void CheckFireConditions();
+    bool IsPlayerDirectlyInSight() const;
 
 public:
     APawnTurret()
