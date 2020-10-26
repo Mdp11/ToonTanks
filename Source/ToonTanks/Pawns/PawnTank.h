@@ -78,7 +78,7 @@ private:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
         AllowPrivateAccess="true"))
-    float DefaultRotationSpeed{250.f};
+    float DefaultRotationSpeed{150.f};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
         AllowPrivateAccess="true"))
