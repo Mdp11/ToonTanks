@@ -376,16 +376,18 @@ void APawnTank::DeactivateAllSounds() const
 
 void APawnTank::HandleMenu()
 {
-    if(bMenuActive)
+    if(bMenuSpawnable)
     {
-        CloseMenu();
-        
+        if(bMenuActive)
+        {
+            CloseMenu();
+        }
+        else
+        {
+            SpawnMenu();
+        }
+        bMenuActive = !bMenuActive;
     }
-    else
-    {
-        SpawnMenu();
-    }
-    bMenuActive = !bMenuActive;
 }
 
 void APawnTank::Heal(const float HealValue) const

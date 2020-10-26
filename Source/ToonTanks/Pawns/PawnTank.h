@@ -122,8 +122,8 @@ private:
     DECLARE_DELEGATE_OneParam(FWeaponSlotInputDelegate, int);
 
     int CurrentWeaponSlot{0};
-    
-    bool bMenuActive{false};
+
+    bool bMenuSpawnable{true};
 
     UPROPERTY(EditAnywhere)
     TArray<TSubclassOf<AProjectileBase>> Weapons;
@@ -207,6 +207,13 @@ public:
 
     void AddAmmo(const int WeaponType, const int AmmoAmount);
 
+    void SetMenuSpawnable(const bool Value) { bMenuSpawnable = Value; }
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void CloseMenu();
+
+    bool IsMenuActive() const { return bMenuActive; }
+
 protected:
 
     virtual void BeginPlay() override;
@@ -216,6 +223,5 @@ protected:
     UFUNCTION(BlueprintImplementableEvent)
     void SpawnMenu();
 
-    UFUNCTION(BlueprintImplementableEvent)
-    void CloseMenu();
+    bool bMenuActive{false};
 };
