@@ -7,6 +7,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/AudioComponent.h"
 #include "ToonTanks/Components/HealthComponent.h"
+#include "ToonTanks/PlayerControllers/PlayerControllerBase.h"
 
 APawnTank::APawnTank()
 {
@@ -24,7 +25,7 @@ APawnTank::APawnTank()
     MovingSound->SetAutoActivate(false);
 
     HealEffect = CreateDefaultSubobject<UParticleSystemComponent>(
-    TEXT("Heal effect"));
+        TEXT("Heal effect"));
     HealEffect->SetupAttachment(RootComponent);
     HealEffect->SetAutoActivate(false);
 
@@ -54,7 +55,7 @@ APawnTank::APawnTank()
 void APawnTank::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     PlayerControllerRef = Cast<APlayerController>(GetController());
 
     DefaultProjectileClass = ProjectileClass;
@@ -77,12 +78,12 @@ void APawnTank::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
     const bool Moving = Move();
     const bool Rotating = Rotate();
-    
+
     Moving || Rotating ? PlayMovingSound() : StopMovingSound();
-    
+
     ManageCurrentShield(DeltaTime);
     ManageCurrentSpeedBoost(DeltaTime);
-    
+
     if (PlayerControllerRef)
     {
         FHitResult HitResult;
@@ -90,7 +91,7 @@ void APawnTank::Tick(float DeltaTime)
             ECC_Visibility, false, HitResult);
         RotateTurret(HitResult.ImpactPoint);
     }
-    
+
     if (bFiring)
     {
         PreFire();
@@ -116,6 +117,8 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
                                      &APawnTank::ActivateSpeedBoost);
     PlayerInputComponent->BindAction("Boost", IE_Released, this,
                                      &APawnTank::DeactivateSpeedBoost);
+    PlayerInputComponent->BindAction("Menu", IE_Pressed, this,
+                                     &APawnTank::HandleMenu);
 
     PlayerInputComponent->BindAction<FWeaponSlotInputDelegate, APawnTank, int>(
         "Weapon Slot 1", IE_Pressed, this, &APawnTank::SwitchWeaponSlot, 0);
@@ -371,12 +374,26 @@ void APawnTank::DeactivateAllSounds() const
     BoostSound->Deactivate();
 }
 
+void APawnTank::HandleMenu()
+{
+    if(bMenuActive)
+    {
+        CloseMenu();
+        
+    }
+    else
+    {
+        SpawnMenu();
+    }
+    bMenuActive = !bMenuActive;
+}
+
 void APawnTank::Heal(const float HealValue) const
 {
     if (HealthComponent)
     {
         HealthComponent->Heal(HealValue);
-        if(HealEffect)
+        if (HealEffect)
         {
             HealEffect->Activate();
         }
