@@ -25,7 +25,7 @@ private:
     UCameraComponent* CameraComponent{nullptr};
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
-    AllowPrivateAccess="true"))
+        AllowPrivateAccess="true"))
     UParticleSystemComponent* HealEffect{nullptr};
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta=(
@@ -123,6 +123,8 @@ private:
 
     int CurrentWeaponSlot{0};
 
+    bool bMenuSpawnable{true};
+
     UPROPERTY(EditAnywhere)
     TArray<TSubclassOf<AProjectileBase>> Weapons;
     TArray<int> WeaponsBulletsCount{1, 0, 0, 0};
@@ -161,6 +163,8 @@ private:
     void StopMovingSound() const;
 
     void DeactivateAllSounds() const;
+
+    void HandleMenu();
 
 public:
     APawnTank();
@@ -203,9 +207,21 @@ public:
 
     void AddAmmo(const int WeaponType, const int AmmoAmount);
 
+    void SetMenuSpawnable(const bool Value) { bMenuSpawnable = Value; }
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void CloseMenu();
+
+    bool IsMenuActive() const { return bMenuActive; }
+
 protected:
 
     virtual void BeginPlay() override;
 
     virtual void PreFire() override;
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void SpawnMenu();
+
+    bool bMenuActive{false};
 };

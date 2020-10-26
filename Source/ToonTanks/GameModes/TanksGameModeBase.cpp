@@ -79,5 +79,11 @@ void ATanksGameModeBase::HandleGameStart()
 
 void ATanksGameModeBase::HandleGameOver(const bool PlayerWon)
 {
+    PlayerTank = Cast<APawnTank>(UGameplayStatics::GetPlayerPawn(this, 0));
+    PlayerTank->SetMenuSpawnable(false);
+    if(PlayerTank->IsMenuActive())
+    {
+        PlayerTank->CloseMenu();
+    }
     GameOver(PlayerWon);
 }
