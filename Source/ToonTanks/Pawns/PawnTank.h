@@ -85,7 +85,7 @@ private:
     float CurrentMovementSpeed{550.f};
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
         AllowPrivateAccess="true"))
-    float CurrentRotationSpeed{250.f};
+    float CurrentRotationSpeed{150.f};
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Skills", meta=(
         AllowPrivateAccess="true"))

@@ -68,6 +68,8 @@ void APawnTank::BeginPlay()
     {
         IdleSound->Activate();
     }
+
+    CalculateRotationInput(0.f);
 }
 
 void APawnTank::Tick(float DeltaTime)
@@ -75,12 +77,12 @@ void APawnTank::Tick(float DeltaTime)
     Super::Tick(DeltaTime);
     const bool Moving = Move();
     const bool Rotating = Rotate();
-
+    
     Moving || Rotating ? PlayMovingSound() : StopMovingSound();
-
+    
     ManageCurrentShield(DeltaTime);
     ManageCurrentSpeedBoost(DeltaTime);
-
+    
     if (PlayerControllerRef)
     {
         FHitResult HitResult;
@@ -88,7 +90,7 @@ void APawnTank::Tick(float DeltaTime)
             ECC_Visibility, false, HitResult);
         RotateTurret(HitResult.ImpactPoint);
     }
-
+    
     if (bFiring)
     {
         PreFire();
