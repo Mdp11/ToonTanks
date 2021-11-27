@@ -95,7 +95,7 @@ void APawnBase::HandleDestruction()
                                              GetActorLocation());
     UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
 
-    GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(DeathShake);
+    GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(DeathShake);
 }
 
 float APawnBase::GetCurrentHealth() const

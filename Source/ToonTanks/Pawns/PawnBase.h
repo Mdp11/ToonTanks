@@ -27,7 +27,7 @@ class TOONTANKS_API APawnBase : public APawn
     USoundBase* DeathSound{nullptr};
 
     UPROPERTY(EditAnywhere, Category="Effects")
-    TSubclassOf<UCameraShake> DeathShake;
+    TSubclassOf<UMatineeCameraShake> DeathShake;
 
     void StopChargingSound() const;
 

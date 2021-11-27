@@ -326,7 +326,7 @@ void APawnTank::PreFire()
                 WeaponsBulletsCount[CurrentWeaponSlot]--;
             }
             Super::PreFire();
-            GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(
+            GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(
                 FireShake, 0.2f);
         }
         else

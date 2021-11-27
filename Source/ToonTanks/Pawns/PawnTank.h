@@ -70,7 +70,7 @@ private:
     FQuat RotationDirection{};
 
     UPROPERTY(EditAnywhere, Category="Effects")
-    TSubclassOf<UCameraShake> FireShake;
+    TSubclassOf<UMatineeCameraShake> FireShake;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(
         AllowPrivateAccess="true"))
